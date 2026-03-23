@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SatzCoach v4 — Sätze üben (A1–C2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══ DESIGN: Warm Night v4 — alle Analyse-Empfehlungen umgesetzt ═══ */
+:root {
+  --accent:#2dd4a8;--accent-l:rgba(45,212,168,0.12);--accent-d:#1a9e7a;
+  --gold:#fbbf24;--gold-l:rgba(251,191,36,0.12);
+  --coral:#fb7185;--coral-l:rgba(251,113,133,0.10);
+  --sky:#60a5fa;--sky-l:rgba(96,165,250,0.10);
+  --violet:#a78bfa;--violet-l:rgba(167,139,250,0.10);
+  --lime:#86efac;--lime-l:rgba(134,239,172,0.10);
+  --bg:#0f172a;--bg2:#1e293b;--bg3:#1e293b;
+  --card:rgba(255,255,255,0.04);--card-b:rgba(255,255,255,0.08);
+  --text:#f1f5f9;--muted:rgba(241,245,249,0.55);--faint:rgba(241,245,249,0.25);
+  --r:20px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;font-size:17px;line-height:1.65;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 10% 0%,rgba(45,212,168,0.07),transparent 50%),radial-gradient(ellipse 40% 40% at 90% 100%,rgba(96,165,250,0.05),transparent 50%)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes softBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes highlightPop{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes markerSlide{from{width:0}to{width:100%}}
+@keyframes postItDrop{from{transform:rotate(-2deg) translateY(-10px);opacity:0}to{transform:rotate(-1deg) translateY(0);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+/* ═══ TOPBAR ═══ */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(15,23,42,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--card-b)}
+.logo{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo small{font-size:11px;font-weight:600;display:block;-webkit-text-fill-color:var(--muted);margin-top:-4px;letter-spacing:0.5px}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.top-btn{padding:7px 14px;border-radius:100px;border:1.5px solid var(--card-b);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Nunito',sans-serif}
+.top-btn:hover{border-color:var(--accent);color:var(--accent)}
+.top-btn.active{border-color:var(--sky);color:var(--sky);background:var(--sky-l)}
+.top-btn.has-key{border-color:var(--accent);color:var(--accent)}
+
+/* ═══ LAYOUT ═══ */
+.app{padding-top:68px;min-height:100vh;position:relative;z-index:1}
+.container{max-width:680px;margin:0 auto;padding:28px 18px 120px}
+
+/* ═══ KARTEN ═══ */
+.card{background:var(--card);border:1px solid var(--card-b);border-radius:var(--r);padding:28px 26px;margin-bottom:20px;animation:fadeIn 0.35s ease}
+.card-title{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card-sub{font-size:17px;color:var(--muted);margin-bottom:20px;line-height:1.7}
+
+/* ═══ WILLKOMMEN ═══ */
+.welcome{text-align:center;padding:40px 0 28px}
+.welcome-emoji{font-size:80px;display:block;margin-bottom:18px;animation:softBounce 3s ease-in-out infinite}
+.welcome h1{font-family:'Baloo 2',cursive;font-size:34px;font-weight:800;margin-bottom:12px;line-height:1.2}
+.welcome p{color:var(--muted);font-size:19px;line-height:1.7;max-width:460px;margin:0 auto}
+
+/* ═══ STIMMUNG (NEU) ═══ */
+.mood-bar{display:flex;justify-content:center;gap:14px;margin:18px 0 24px}
+.mood-btn{font-size:36px;padding:10px;border-radius:16px;border:2px solid var(--card-b);background:transparent;cursor:pointer;transition:all 0.2s;opacity:0.5}
+.mood-btn:hover{opacity:1;transform:scale(1.15);border-color:var(--accent)}
+.mood-btn.selected{opacity:1;transform:scale(1.15);border-color:var(--accent);background:var(--accent-l);box-shadow:0 0 20px rgba(45,212,168,0.2)}
+.mood-label{text-align:center;font-size:14px;color:var(--muted);margin-top:-8px;margin-bottom:16px}
+
+/* ═══ LERNZIEL (NEU) ═══ */
+.lernziel-box{background:linear-gradient(135deg,rgba(96,165,250,0.1),rgba(167,139,250,0.06));border:2px solid rgba(96,165,250,0.3);border-radius:16px;padding:18px 22px;margin-bottom:20px;animation:fadeIn 0.3s}
+.lernziel-box .lz-icon{font-size:28px;margin-right:10px}
+.lernziel-box .lz-title{font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--sky);margin-bottom:6px}
+.lernziel-box .lz-text{font-size:17px;font-weight:700;line-height:1.6}
+.lernziel-box .lz-auto{font-size:12px;color:var(--muted);margin-top:6px;font-style:italic}
+
+/* ═══ START-KARTE ═══ */
+.start-card{background:linear-gradient(135deg,rgba(45,212,168,0.08),rgba(96,165,250,0.05));border:2.5px solid rgba(45,212,168,0.3);border-radius:24px;padding:36px 28px;cursor:pointer;text-align:center;transition:all 0.3s;max-width:460px;margin:0 auto}
+.start-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 8px 40px rgba(45,212,168,0.15)}
+.start-card .emoji{font-size:52px;display:block;margin-bottom:14px}
+.start-card .title{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;margin-bottom:8px}
+.start-card .desc{font-size:17px;color:var(--muted);line-height:1.6}
+
+/* ═══ SCHRITTE — 5 Phasen (NEU: Planen eingefügt) ═══ */
+.schritte{display:flex;gap:0;margin-bottom:28px;border-radius:16px;overflow:hidden;border:1.5px solid var(--card-b);background:var(--card)}
+.schritt{flex:1;padding:12px 4px;text-align:center;font-size:10px;font-weight:800;color:var(--faint);border-right:1px solid var(--card-b);transition:all 0.35s;letter-spacing:0.3px;text-transform:uppercase}
+.schritt:last-child{border-right:none}
+.schritt.done{background:var(--lime-l);color:var(--lime)}
+.schritt.now{background:var(--accent-l);color:var(--accent)}
+.schritt-num{font-size:18px;display:block;margin-bottom:2px}
+
+/* ═══ PLANUNGS-PHASE (NEU) ═══ */
+.plan-box{background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(96,165,250,0.06));border:2px solid rgba(167,139,250,0.3);border-radius:var(--r);padding:28px 26px;margin:16px 0;animation:fadeIn 0.4s;text-align:center}
+.plan-checklist{text-align:left;max-width:400px;margin:18px auto;display:flex;flex-direction:column;gap:10px}
+.plan-check{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:14px;border:1.5px solid var(--card-b);background:var(--card);cursor:pointer;transition:all 0.2s;font-size:16px;font-weight:600}
+.plan-check:hover{border-color:var(--violet)}
+.plan-check.checked{border-color:var(--lime);background:var(--lime-l)}
+.plan-check .check-icon{font-size:22px;width:28px;text-align:center}
+
+/* ═══ FEHLER-KARTE ═══ */
+.fehler-card{position:relative;border-radius:18px;padding:18px 22px;margin:10px 0;font-size:17px;line-height:1.8;background:var(--gold-l);border:2px solid rgba(251,191,36,0.25);cursor:pointer;transition:all 0.25s;overflow:hidden;user-select:none}
+.fehler-card::before{content:'';position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--gold);border-radius:0 0 18px 18px;transition:width 0.4s ease}
+.fehler-card:hover{border-color:rgba(251,191,36,0.6);transform:translateY(-2px)}
+.fehler-card.aufgedeckt{background:linear-gradient(135deg,rgba(251,191,36,0.18),rgba(251,191,36,0.08));border-color:var(--gold);animation:highlightPop 0.35s ease}
+.fehler-card.aufgedeckt::before{width:100%}
+.fehler-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0f172a;font-size:13px;font-weight:900;margin-right:10px;flex-shrink:0}
+.fehler-typ{font-size:11px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.fehler-verdeckt{filter:blur(5px);opacity:0.35;transition:all 0.4s;pointer-events:none}
+.fehler-aufgedeckt-inhalt{animation:fadeIn 0.3s ease}
+.klick-hint{font-size:12px;color:var(--gold);opacity:0.7;margin-top:6px;display:flex;align-items:center;gap:5px;font-weight:700}
+.beispiel-pill{display:inline-block;margin-top:8px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.3);border-radius:100px;padding:4px 14px;font-size:14px;font-style:italic;color:var(--gold)}
+
+/* ═══ REGELKARTE (NEU) ═══ */
+.regel-popup{background:var(--bg2);border:2px solid var(--sky);border-radius:18px;padding:22px 24px;margin:12px 0;animation:fadeIn 0.3s}
+.regel-popup .rp-title{font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;color:var(--sky);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.regel-popup .rp-rule{font-size:16px;line-height:1.7;margin-bottom:12px;padding:14px 16px;background:var(--sky-l);border-radius:12px;border-left:4px solid var(--sky)}
+.regel-popup .rp-examples{font-size:15px;color:var(--muted);line-height:1.7}
+.regel-popup .rp-examples span{display:block;margin:4px 0}
+.regel-popup .rp-close{margin-top:12px;padding:8px 18px;border-radius:100px;border:1.5px solid var(--card-b);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif}
+
+/* ═══ LEUCHTSTIFT ═══ */
+.highlight-wort{background:linear-gradient(180deg,transparent 40%,rgba(251,191,36,0.55) 40%);border-radius:3px;padding:0 2px;transition:background 0.3s}
+
+/* ═══ KORREKTUR-EINGABE ═══ */
+textarea.korr-ta{font-size:20px;border-color:rgba(45,212,168,0.3);background:rgba(45,212,168,0.04)}
+textarea.korr-ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,212,168,0.15)}
+.paste-warn{animation:shake 0.4s ease;border-color:var(--coral)!important;box-shadow:0 0 0 3px rgba(251,113,133,0.25)!important}
+
+/* ═══ HAFTKORREKTUR ═══ */
+.haftkorrektur{background:#fef9c3;color:#1e293b;border-radius:4px 18px 18px 18px;padding:22px 26px;font-size:20px;font-weight:800;line-height:1.7;box-shadow:3px 6px 24px rgba(0,0,0,0.35),0 1px 0 rgba(255,255,255,0.5) inset;position:relative;margin:20px 0;animation:postItDrop 0.5s cubic-bezier(0.34,1.56,0.64,1);transform:rotate(-1deg);border-left:5px solid #fbbf24}
+.haftkorrektur::before{content:'📌';position:absolute;top:-12px;left:14px;font-size:22px}
+.haftkorrektur .haft-label{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:#92400e;margin-bottom:8px;display:block}
+
+/* ═══ AUSBLEND- & HEFT-PHASE ═══ */
+.ausblend-box{text-align:center;padding:40px 24px;background:linear-gradient(135deg,rgba(167,139,250,0.12),rgba(45,212,168,0.06));border:2px solid rgba(167,139,250,0.35);border-radius:var(--r);margin:16px 0;animation:fadeIn 0.4s}
+.heft-box{text-align:center;padding:36px 24px;background:linear-gradient(135deg,rgba(134,239,172,0.1),rgba(45,212,168,0.06));border:2px dashed rgba(134,239,172,0.45);border-radius:var(--r);margin:16px 0;animation:fadeIn 0.4s}
+
+/* ═══ TEXTAREA ═══ */
+textarea{width:100%;padding:18px 20px;border-radius:16px;background:rgba(255,255,255,0.05);border:2px solid var(--card-b);color:var(--text);font-family:'Nunito',sans-serif;font-size:19px;font-weight:600;resize:vertical;outline:none;transition:border-color 0.2s,box-shadow 0.2s;line-height:1.7;min-height:100px}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,212,168,0.15)}
+textarea::placeholder{color:var(--faint);font-weight:500}
+.char-count{text-align:right;font-size:13px;color:var(--faint);margin-top:6px}
+
+/* ═══ BUTTONS ═══ */
+.btn{padding:14px 24px;border-radius:100px;font-size:16px;font-weight:800;border:none;cursor:pointer;transition:all 0.2s;font-family:'Nunito',sans-serif;display:inline-flex;align-items:center;gap:7px}
+.btn-primary{background:var(--accent);color:#0f172a}
+.btn-primary:hover{background:var(--accent-d);transform:scale(1.03)}
+.btn-ghost{background:rgba(255,255,255,0.06);color:var(--text);border:1.5px solid var(--card-b)}
+.btn-ghost:hover{background:rgba(255,255,255,0.1)}
+.btn-green{background:var(--lime);color:#0f172a;font-weight:900}
+.btn-green:hover{filter:brightness(0.9)}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn:disabled{opacity:0.4;pointer-events:none}
+
+/* ═══ SPEAK-BUTTON ═══ */
+.speak-btn{padding:7px 14px;border-radius:100px;font-size:13px;font-weight:700;border:1.5px solid var(--sky);background:var(--sky-l);color:var(--sky);cursor:pointer;transition:all 0.2s;font-family:'Nunito',sans-serif;display:inline-flex;align-items:center;gap:5px}
+.speak-btn:hover{background:var(--sky);color:#0f172a}
+.speak-btn.speaking{background:var(--sky);color:#0f172a;animation:blink 1s ease-in-out infinite}
+
+/* ═══ FEEDBACK-BOXEN ═══ */
+.fb{border-radius:18px;padding:18px 22px;margin:14px 0;font-size:17px;line-height:1.8;animation:fadeIn 0.3s}
+.fb.good{background:var(--lime-l);border:1.5px solid rgba(134,239,172,0.3)}
+.fb.warn{background:var(--gold-l);border:1.5px solid rgba(251,191,36,0.3)}
+.fb.bad{background:var(--coral-l);border:1.5px solid rgba(251,113,133,0.3)}
+.fb.info{background:var(--sky-l);border:1.5px solid rgba(96,165,250,0.25)}
+.fb.ai{background:var(--accent-l);border:1.5px solid rgba(45,212,168,0.25)}
+.fb.absicht{background:var(--violet-l);border:1.5px solid rgba(167,139,250,0.3)}
+.fb.frage{background:var(--coral-l);border:1.5px solid rgba(251,113,133,0.25)}
+.fb-label{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;opacity:0.6;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+
+/* ═══ ORIGINAL-SATZ BOX ═══ */
+.original-satz{background:rgba(255,255,255,0.05);border:2px solid var(--card-b);border-radius:16px;padding:20px 22px;margin-bottom:18px;font-size:21px;font-weight:800;line-height:1.6;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.original-satz .label{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:8px}
+
+/* ═══ KORREKTUR-BOX ═══ */
+.korr-box{background:#f8fafc;border-radius:16px;padding:22px 24px;color:#1e293b;font-size:20px;font-weight:700;line-height:1.7;margin:14px 0;border:2px solid rgba(45,212,168,0.3);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.korr-label{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent-d);margin-bottom:10px;display:block}
+
+/* ═══ HINWEIS ═══ */
+.hint{padding:16px 20px;border-radius:14px;font-size:16px;font-weight:600;background:var(--sky-l);border-left:4px solid var(--sky);color:rgba(241,245,249,0.85);margin:10px 0;line-height:1.7}
+
+/* ═══ ERFOLG ═══ */
+.erfolg{text-align:center;padding:32px 24px;background:linear-gradient(135deg,var(--accent-l),var(--lime-l));border:2px solid rgba(45,212,168,0.3);border-radius:var(--r);margin:16px 0;animation:fadeIn 0.4s}
+.erfolg-stars{font-size:52px;display:block;margin-bottom:12px}
+.erfolg-msg{font-family:'Baloo 2',cursive;font-size:26px;font-weight:800;color:var(--gold);margin-bottom:8px}
+
+/* ═══ STREAK (NEU) ═══ */
+.streak-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(251,191,36,0.08));border:1.5px solid rgba(251,191,36,0.3);font-size:13px;font-weight:800;color:var(--gold);margin:8px 0}
+
+/* ═══ REFLEXION (NEU) ═══ */
+.reflexion-box{background:linear-gradient(135deg,rgba(134,239,172,0.08),rgba(45,212,168,0.04));border:2px solid rgba(134,239,172,0.3);border-radius:var(--r);padding:24px 26px;margin:16px 0;text-align:center;animation:fadeIn 0.4s}
+.reflexion-btns{display:flex;justify-content:center;gap:12px;margin-top:16px}
+.refl-btn{padding:12px 24px;border-radius:100px;border:2px solid var(--card-b);background:transparent;color:var(--text);font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Nunito',sans-serif}
+.refl-btn:hover{border-color:var(--accent);background:var(--accent-l)}
+.refl-btn.selected{border-color:var(--lime);background:var(--lime-l);color:var(--lime)}
+
+/* ═══ SELFCHECK MODE (NEU) ═══ */
+.selfcheck-card{background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(96,165,250,0.06));border:2.5px solid rgba(167,139,250,0.3);border-radius:24px;padding:36px 28px;cursor:pointer;text-align:center;transition:all 0.3s;max-width:460px;margin:12px auto 0}
+.selfcheck-card:hover{transform:translateY(-4px);border-color:var(--violet);box-shadow:0 8px 40px rgba(167,139,250,0.15)}
+.selfcheck-checklist{text-align:left;display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.sc-check{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--card-b);background:var(--card);cursor:pointer;transition:all 0.2s;font-size:15px}
+.sc-check:hover{border-color:var(--violet)}
+.sc-check.checked{border-color:var(--lime);background:var(--lime-l)}
+.sc-check .sc-icon{font-size:20px;width:24px;text-align:center}
+
+/* ═══ CHAT ═══ */
+.chat-inp{flex:1;padding:13px 20px;border-radius:100px;background:rgba(255,255,255,0.05);border:1.5px solid var(--card-b);color:var(--text);font-family:'Nunito',sans-serif;font-size:16px;outline:none}
+.chat-inp:focus{border-color:var(--accent)}
+.chat-inp::placeholder{color:var(--faint)}
+.send-btn{width:46px;height:46px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;font-size:18px;transition:all 0.2s;flex-shrink:0;color:#0f172a;font-weight:800}
+.send-btn:hover{background:var(--accent-d);transform:scale(1.08)}
+
+/* ═══ UTILITY ═══ */
+.sdiv{height:1px;background:var(--card-b);margin:22px 0}
+.slabel{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.cur{display:inline-block;width:8px;height:16px;background:var(--accent);border-radius:2px;animation:blink 0.7s steps(1) infinite;vertical-align:middle;margin-left:3px}
+
+/* ═══ MODAL ═══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--bg2);border:1.5px solid var(--card-b);border-radius:28px;padding:36px 30px;max-width:420px;width:100%;animation:fadeIn 0.3s}
+.modal h2{font-family:'Baloo 2',cursive;font-size:24px;margin-bottom:10px}
+.modal p{font-size:15px;color:var(--muted);margin-bottom:22px;line-height:1.7}
+.modal input{width:100%;padding:14px 18px;border-radius:14px;background:rgba(255,255,255,0.06);border:1.5px solid var(--card-b);color:var(--text);font-family:'Nunito',sans-serif;font-size:16px;outline:none;margin-bottom:14px}
+.modal input:focus{border-color:var(--accent)}
+
+/* ═══ NIVEAU ═══ */
+.niveau-bar{display:flex;gap:6px;align-items:center;padding:4px 6px;background:rgba(255,255,255,0.05);border-radius:100px;border:1px solid var(--card-b)}
+.niveau-btn{padding:5px 12px;border-radius:100px;border:none;cursor:pointer;font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;background:transparent;color:var(--muted);transition:all 0.2s;letter-spacing:0.3px}
+.niveau-btn:hover{color:var(--text)}
+.niveau-btn.active-a{background:var(--lime);color:#0f172a}
+.niveau-btn.active-b{background:var(--gold);color:#0f172a}
+.niveau-btn.active-c{background:var(--violet);color:#fff}
+.niveau-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:12px;font-weight:800;letter-spacing:0.5px;margin-left:8px}
+.badge-a{background:var(--lime-l);color:var(--lime);border:1px solid rgba(134,239,172,0.3)}
+.badge-b{background:var(--gold-l);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+.badge-c{background:var(--violet-l);color:var(--violet);border:1px solid rgba(167,139,250,0.3)}
+
+/* ═══ FREIES SCHREIBEN ═══ */
+.feedback-gesamt{border-radius:20px;padding:24px 26px;margin:14px 0;background:linear-gradient(135deg,rgba(45,212,168,0.08),rgba(96,165,250,0.05));border:2px solid rgba(45,212,168,0.25);animation:fadeIn 0.4s}
+.feedback-gesamt .gesamt-note{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.note-kreis{width:64px;height:64px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:22px;font-weight:900}
+.note-a{background:var(--lime-l);color:var(--lime);border:2px solid rgba(134,239,172,0.5)}
+.note-b{background:var(--gold-l);color:var(--gold);border:2px solid rgba(251,191,36,0.5)}
+.note-c{background:var(--coral-l);color:var(--coral);border:2px solid rgba(251,113,133,0.5)}
+.note-d{background:var(--sky-l);color:var(--sky);border:2px solid rgba(96,165,250,0.4)}
+.kriterium-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-top:1px solid var(--card-b)}
+.kriterium-bar-wrap{flex:1}
+.kriterium-bar-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.kriterium-bar-track{height:8px;background:var(--card-b);border-radius:6px;overflow:hidden}
+.kriterium-bar-fill{height:100%;border-radius:6px;transition:width 0.8s ease}
+.bar-gut{background:var(--lime)}.bar-mittel{background:var(--gold)}.bar-schwach{background:var(--coral)}
+.korrektur-highlight{background:rgba(255,255,255,0.04);border-radius:14px;padding:16px 20px;margin:10px 0;border-left:4px solid var(--accent);font-size:16px;line-height:1.8}
+
+/* ═══ IMPULS-KARTEN (NEU) ═══ */
+.impuls-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.impuls-card{padding:14px 16px;border-radius:14px;border:1.5px solid var(--card-b);background:var(--card);cursor:pointer;transition:all 0.2s;text-align:center}
+.impuls-card:hover{border-color:var(--accent);background:var(--accent-l);transform:translateY(-2px)}
+.impuls-card .imp-emoji{font-size:28px;display:block;margin-bottom:6px}
+.impuls-card .imp-text{font-size:14px;font-weight:700;line-height:1.4}
+
+/* ═══ PRINT ═══ */
+@media print{
+  .topbar,.btn-row,.speak-btn,.send-btn,.chat-inp,.niveau-bar,#key-modal,.hint,.start-card,.welcome,.no-print,.mood-bar,.mood-label,.selfcheck-card{display:none!important}
+  body{background:white!important;color:#1e293b!important;font-size:13px}
+  .card,.feedback-gesamt{background:white!important;border:1px solid #e2e8f0!important;page-break-inside:avoid;color:#1e293b!important}
+  .fb{background:#f8fafc!important;border:1px solid #e2e8f0!important;color:#1e293b!important}
+  .print-only{display:block!important}
+  .note-kreis{border:2px solid #64748b!important}
+  .kriterium-bar-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+.print-only{display:none}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:520px){
+  .welcome h1{font-size:26px}.welcome p{font-size:17px}
+  .btn{font-size:15px;padding:13px 20px}.container{padding:20px 14px 100px}
+  textarea{font-size:18px}.original-satz{font-size:18px}.korr-box{font-size:18px}
+  .impuls-grid{grid-template-columns:1fr}
+  .schritte .schritt{font-size:9px;padding:10px 2px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">SatzCoach<small>v4 — Sätze üben</small></div>
+  <div class="topbar-right">
+    <div class="niveau-bar">
+      <button class="niveau-btn n-a" id="niv-a" onclick="setNiveau('A')">A1–A2</button>
+      <button class="niveau-btn n-b" id="niv-b" onclick="setNiveau('B')">B1–B2</button>
+      <button class="niveau-btn n-c" id="niv-c" onclick="setNiveau('C')">C1–C2</button>
+    </div>
+    <span id="ai-loading" style="display:none;padding:6px 14px;border-radius:100px;background:var(--accent-l);border:1.5px solid rgba(45,212,168,0.35);font-size:13px;font-weight:800;color:var(--accent);align-items:center;gap:5px;"><span class="cur"></span> KI denkt…</span>
+    <button class="top-btn" id="tts-toggle" onclick="toggleTTS()">🔇 Vorlesen</button>
+    <button class="top-btn" id="proto-btn" onclick="zeigeProtokoll()" style="display:none;">📊</button>
+    <button class="top-btn" id="key-btn" onclick="openKey()">🔑 API-Key</button>
+  </div>
+</div>
+
+<div class="app"><div class="container" id="app"></div></div>
+
+<div class="overlay" id="key-modal" style="display:none;">
+  <div class="modal">
+    <h2>🔑 API-Key eingeben</h2>
+    <p>Der KI-Coach braucht einen Anthropic API-Key. Deine Lehrperson gibt dir diesen Key.</p>
+    <input type="password" id="key-inp" placeholder="sk-ant-..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" style="flex:1" onclick="saveKey()">Speichern</button>
+      <button class="btn btn-ghost" onclick="closeKey()">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="regel-modal" style="display:none;">
+  <div class="modal" style="max-width:500px;" id="regel-modal-content"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   SATZCOACH v4 — ALLE ANALYSE-EMPFEHLUNGEN UMGESETZT
+   ═══════════════════════════════════════════════════════════
+   NEU in v4:
+   1.2  Planungsphase (5-Phasen-Modell statt 4)
+   1.3  Adaptive Schwierigkeitssteuerung aus Protokoll
+   1.4  Aufgabenimpulse / Satzanfänge / Themen
+   1.5  Spaced Repetition (Wiederholungs-Hinweis)
+   2.1  Sichtbare Lernziele (auto + manuell)
+   2.2  LP21-Kompetenzbezug im Protokoll
+   2.4  Überarbeitungsschleife (Freies Schreiben)
+   2.5  Grammatik-Regelkarten (klickbar)
+   3.3  Selbstcheck-Modus (Autonomie-Pfad)
+   3.4  Stimmungsabfrage (Emoji)
+   3.5  Protokoll-Export (Print/PDF)
+   3.6  Streak-Anzeige (dezent)
+   4.1  Protokoll-Export als JSON
+   ═══════════════════════════════════════════════════════════ */
+
+const S={screen:'home',apiKey:localStorage.getItem('satzcoach_api_key')||'',ttsOn:localStorage.getItem('satzcoach_tts')==='1',niveau:localStorage.getItem('satzcoach_niveau')||'A',v_satz:'',v_phase:0,v_analyse:null,v_korrektur:'',v_pasted:false,v_korrResult:null,v_aufgedeckt:[],v_planChecks:[],aiLoading:false,mood:null,lernziel:'',lernzielErreicht:null,regelPopup:null,selfcheckMode:false,sc_eigeneFehler:[],impuls:null};
+
+/* ═══ NIVEAU-KONFIGURATION ═══ */
+const NIVEAU_CFG = {
+  A: {
+    label:'A1–A2',badge:'A1–A2',badgeClass:'badge-a',btnClass:'active-a',
+    zielgruppe:'Kleinklassen-Schüler (10–14 Jahre, Förderbedarf, Lernschwäche, Schweiz)',
+    sprachNiveau:'Sehr einfache Sprache (Niveau A1–A2)',
+    hilfeLevel:'Einfachste Sprache, kurze Sätze, viel Ermutigung. Max 80 Wörter.',
+    fehlerFokus:'Grundfehler: Wortstellung, Verb-Form, Artikel, Gross-Kleinschreibung, Satzzeichen',
+    beispielSatz:'z.B.: Ich wird in die Schule bekommt.',
+    kiLabel:'KI-Analyse für die Lehrperson',
+    maxFehler:'Max 3 Fehler. Fehler nach Wichtigkeit sortieren.',
+    kiPersona:'erfahrener Förderschul-Lehrer (Schweiz)',
+    willkommen:'Schreib irgendeinen Satz — auch wenn er nicht perfekt ist! Ich verstehe, was du meinst.',
+    hinweis:'💡 Schreib einfach drauf los — Fehler sind in Ordnung!',
+    emoji:'✍️',
+    korrekturLevel:'Prüfe ALLES: Verb-Form, Wortstellung, Artikel, Gross-/Kleinschreibung, Satzzeichen, Rechtschreibung.',
+    planChecks:['Punkt am Ende?','Grosser Anfangsbuchstabe?','Verb an der richtigen Stelle?'],
+  },
+  B: {
+    label:'B1–B2',badge:'B1–B2',badgeClass:'badge-b',btnClass:'active-b',
+    zielgruppe:'Regelschüler (12–16 Jahre, Regelklasse, Schweiz)',
+    sprachNiveau:'Klare, jugendgerechte Sprache (Niveau B1–B2)',
+    hilfeLevel:'Verständliche Sprache für Teenager, präzise Erklärungen. Max 100 Wörter.',
+    fehlerFokus:'Mittelstufen-Fehler: Kommasetzung, Konjunktiv, Relativsätze, Kasus, Zeitformen, Satzgefüge',
+    beispielSatz:'z.B.: Obwohl ich müde war, habe ich die Aufgabe nicht gemacht worden.',
+    kiLabel:'KI-Analyse für die Lehrperson',
+    maxFehler:'Max 4 Fehler. Wichtigste zuerst (Grammatik vor Stilistik).',
+    kiPersona:'erfahrener Deutschlehrer für Regelklassen (Schweiz)',
+    willkommen:'Schreib einen Satz und ich analysiere Grammatik, Zeitformen und Satzbau.',
+    hinweis:'💡 Achte auf Kommas, Zeitformen und Satzbau!',
+    emoji:'📝',
+    korrekturLevel:'Prüfe: Kommasetzung, Konjunktiv, Kasus, Zeitformen, Relativsätze, Satzzeichen, Rechtschreibung.',
+    planChecks:['Komma vor dem Nebensatz?','Verb am Ende im Nebensatz?','Richtige Zeitform?','Kasus korrekt?'],
+  },
+  C: {
+    label:'C1–C2',badge:'C1–C2',badgeClass:'badge-c',btnClass:'active-c',
+    zielgruppe:'Fortgeschrittene Schüler / Gymnasiasten (15–18 Jahre, Schweiz) oder Erwachsene',
+    sprachNiveau:'Anspruchsvolle Sprache (Niveau C1–C2)',
+    hilfeLevel:'Präzise, stilsichere Formulierungen. Stilistische Nuancen erläutern. Max 120 Wörter.',
+    fehlerFokus:'Fortgeschrittene: Stilistik, Kohärenz, Nominalstil, Konjunktiv II, Passiv, Idiomatik',
+    beispielSatz:'z.B.: Das Experiment, das wir durchgeführt hatten, zeigte Ergebnisse, die überraschend gewesen sind.',
+    kiLabel:'Stilistische KI-Analyse',
+    maxFehler:'Max 5 Anmerkungen.',
+    kiPersona:'Deutschlektor / Gymnasiallehrer mit hohen stilistischen Ansprüchen (Schweiz)',
+    willkommen:'Schreib einen Satz — ich analysiere Grammatik, Stil und Ausdrucksweise auf hohem Niveau.',
+    hinweis:'💡 Auf diesem Niveau zählen Präzision, Stilistik und Kohärenz.',
+    emoji:'🖊️',
+    korrekturLevel:'Prüfe: Stilistik, Nominalstil, Passiv, Konjunktiv II, Kasus, Kommasetzung, Zeitenfolge, Kohärenz.',
+    planChecks:['Stilebene einheitlich?','Konjunktiv korrekt?','Keine Redundanzen?','Idiomatisch natürlich?','Kommasetzung geprüft?'],
+  }
+};
+function getNiv(){return NIVEAU_CFG[S.niveau]||NIVEAU_CFG.A;}
+function setNiveau(n){S.niveau=n;localStorage.setItem('satzcoach_niveau',n);S.v_satz='';S.v_phase=0;S.v_analyse=null;S.v_korrektur='';S.v_pasted=false;S.aiLoading=false;S.selfcheckMode=false;S.sc_eigeneFehler=[];S.impuls=null;window.speechSynthesis?.cancel();render();}
+function syncNiveauBtns(){['A','B','C'].forEach(n=>{const btn=document.getElementById('niv-'+n.toLowerCase());if(!btn)return;const cfg=NIVEAU_CFG[n];btn.className='niveau-btn n-'+n.toLowerCase()+(S.niveau===n?' '+cfg.btnClass:'');});}
+
+/* ═══ PROTOKOLL & PERSISTENZ ═══ */
+let PROTOKOLL=[];
+try{PROTOKOLL=JSON.parse(localStorage.getItem('satzcoach_protokoll')||'[]');}catch(e){PROTOKOLL=[];}
+function saveProtokoll(){try{localStorage.setItem('satzcoach_protokoll',JSON.stringify(PROTOKOLL));}catch(e){}}
+
+/* ═══ STREAK-BERECHNUNG (NEU 3.6) ═══ */
+function getStreak(){
+  if(!PROTOKOLL.length)return 0;
+  const dates=[...new Set(PROTOKOLL.map(e=>e.datum))].sort().reverse();
+  const today=new Date().toLocaleDateString('de-CH');
+  const yesterday=new Date(Date.now()-86400000).toLocaleDateString('de-CH');
+  if(dates[0]!==today&&dates[0]!==yesterday)return 0;
+  let streak=1;
+  for(let i=0;i<dates.length-1;i++){
+    const d1=parseDeCH(dates[i]),d2=parseDeCH(dates[i+1]);
+    if(!d1||!d2)break;
+    const diff=(d1-d2)/(86400000);
+    if(diff<=1.5)streak++;else break;
+  }
+  return streak;
+}
+function parseDeCH(s){const p=s.split('.');if(p.length<3)return null;return new Date(+p[2],+p[1]-1,+p[0]);}
+
+/* ═══ ADAPTIVE LERNZIELE (NEU 1.3 + 2.1) ═══ */
+function getAdaptiveLernziel(){
+  const recent=PROTOKOLL.slice(-15);
+  if(recent.length<2)return null;
+  const fehlerCount={};
+  recent.forEach(e=>(e.fehlerTypen||[]).forEach(t=>{fehlerCount[t]=(fehlerCount[t]||0)+1;}));
+  const top=Object.entries(fehlerCount).sort((a,b)=>b[1]-a[1]);
+  if(!top.length)return null;
+  const typ=top[0][0];
+  const regel=REGELKARTEN[typ];
+  return {typ,count:top[0][1],regel:regel?.kurz||'Achte auf '+typ+'.',lp21:regel?.lp21||''};
+}
+
+/* ═══ SPACED REPETITION CHECK (NEU 1.5) ═══ */
+function getRepetitionSuggestion(){
+  const now=Date.now();
+  const candidates=PROTOKOLL.filter(e=>{
+    if(e.richtig)return false;
+    const d=parseDeCH(e.datum);
+    if(!d)return false;
+    const age=(now-d.getTime())/86400000;
+    return age>=1&&age<=7;
+  });
+  if(!candidates.length)return null;
+  return candidates[Math.floor(Math.random()*candidates.length)];
+}
+
+/* ═══ AUFGABEN-IMPULSE (NEU 1.4) ═══ */
+const IMPULSE = {
+  A: [
+    {emoji:'🏫',text:'In der Schule…'},
+    {emoji:'⚽',text:'Am Wochenende…'},
+    {emoji:'🐶',text:'Mein Lieblingstier…'},
+    {emoji:'🍕',text:'Zum Mittagessen…'},
+    {emoji:'👨‍👩‍👧',text:'Meine Familie…'},
+    {emoji:'☀️',text:'Heute ist…'},
+    {emoji:'🎮',text:'Nach der Schule…'},
+    {emoji:'🚌',text:'Auf dem Schulweg…'},
+  ],
+  B: [
+    {emoji:'🌍',text:'Obwohl viele Menschen…'},
+    {emoji:'📱',text:'Wenn ich mein Handy…'},
+    {emoji:'🏔️',text:'Die Schweiz ist…'},
+    {emoji:'📚',text:'In diesem Buch geht es um…'},
+    {emoji:'🤔',text:'Ich bin der Meinung, dass…'},
+    {emoji:'🎭',text:'Falls ich die Möglichkeit hätte…'},
+  ],
+  C: [
+    {emoji:'⚖️',text:'Die zunehmende Digitalisierung…'},
+    {emoji:'🔬',text:'Aus wissenschaftlicher Sicht…'},
+    {emoji:'🏛️',text:'Die politische Debatte um…'},
+    {emoji:'📊',text:'Angesichts der Tatsache, dass…'},
+    {emoji:'🌐',text:'Im Spannungsfeld zwischen…'},
+  ]
+};
+
+/* ═══ REGELKARTEN (NEU 2.5) ═══ */
+const REGELKARTEN = {
+  'WORTSTELLUNG': {
+    titel:'Wortstellung im Hauptsatz',
+    kurz:'Das Verb steht im Hauptsatz immer an 2. Stelle.',
+    regel:'Im deutschen Hauptsatz steht das konjugierte Verb IMMER an zweiter Position. Egal, was am Anfang steht — das Verb kommt als Zweites.',
+    beispiele:['✅ Heute <b>gehe</b> ich in die Schule.','✅ Ich <b>gehe</b> heute in die Schule.','❌ Heute ich gehe in die Schule.'],
+    lp21:'D.5.E.1 — Verb im Hauptsatz'
+  },
+  'VERB-FORM': {
+    titel:'Verb-Formen',
+    kurz:'Das Verb muss zum Subjekt passen (ich gehe, du gehst, er geht).',
+    regel:'Das Verb wird konjugiert — es passt sich dem Subjekt an. Wer oder was etwas tut, bestimmt die Endung des Verbs.',
+    beispiele:['✅ Ich <b>gehe</b> / Du <b>gehst</b> / Er <b>geht</b>','✅ Wir <b>haben</b> / Ihr <b>habt</b> / Sie <b>haben</b>','❌ Ich gehst in die Schule.'],
+    lp21:'D.5.E.1 — Verb-Konjugation'
+  },
+  'ARTIKEL': {
+    titel:'Artikel (der, die, das)',
+    kurz:'Jedes Nomen hat einen bestimmten Artikel.',
+    regel:'Im Deutschen hat jedes Nomen ein grammatisches Geschlecht: maskulin (der), feminin (die) oder neutrum (das). Den Artikel muss man mitlernen.',
+    beispiele:['✅ <b>Der</b> Hund / <b>Die</b> Katze / <b>Das</b> Haus','✅ <b>Ein</b> Buch / <b>Eine</b> Tasche','❌ Das Hund bellt.'],
+    lp21:'D.5.E.1 — Nomen und Artikel'
+  },
+  'RECHTSCHREIBUNG': {
+    titel:'Rechtschreibung',
+    kurz:'Wörter richtig schreiben — Doppellaute, ie, ck, tz beachten.',
+    regel:'Bei der Rechtschreibung helfen Regeln: Nach kurzem Vokal oft Doppelkonsonant (Sonne, kommen). Langes i wird meist «ie» geschrieben (liegen, spielen).',
+    beispiele:['✅ Ich <b>komme</b> morgen. (Doppel-m)','✅ Ich <b>spiele</b> gern. (ie)','❌ Ich kome morgen.'],
+    lp21:'D.5.F — Rechtschreibung'
+  },
+  'GROSS-KLEIN': {
+    titel:'Gross- und Kleinschreibung',
+    kurz:'Nomen und Satzanfänge werden grossgeschrieben.',
+    regel:'Grossgeschrieben werden: der Satzanfang, alle Nomen (Dinge, die man anfassen oder sich vorstellen kann), und Namen. Verben und Adjektive werden kleingeschrieben.',
+    beispiele:['✅ <b>D</b>er <b>H</b>und spielt im <b>G</b>arten.','✅ Ich gehe <b>h</b>eute in die <b>S</b>chule.','❌ der hund Spielt im garten.'],
+    lp21:'D.5.F — Gross-/Kleinschreibung'
+  },
+  'SATZZEICHEN': {
+    titel:'Satzzeichen',
+    kurz:'Jeder Satz endet mit einem Punkt, Fragezeichen oder Ausrufezeichen.',
+    regel:'Am Satzende steht immer ein Satzzeichen: Punkt (.) bei Aussagen, Fragezeichen (?) bei Fragen, Ausrufezeichen (!) bei Ausrufen oder Aufforderungen.',
+    beispiele:['✅ Ich gehe nach Hause<b>.</b>','✅ Kommst du mit<b>?</b>','❌ Ich gehe nach Hause'],
+    lp21:'D.5.F — Satzzeichen'
+  },
+  'MEHRZAHL': {
+    titel:'Mehrzahl (Plural)',
+    kurz:'Bei der Mehrzahl ändert sich oft der Artikel und die Endung.',
+    regel:'Die Mehrzahl (Plural) wird unterschiedlich gebildet: -e (Hunde), -er (Kinder), -en (Katzen), -s (Autos). Manchmal ändert sich auch der Vokal (Umlaut): Haus → Häuser.',
+    beispiele:['✅ ein Hund → zwei <b>Hunde</b>','✅ ein Kind → drei <b>Kinder</b>','❌ zwei Hunds'],
+    lp21:'D.5.E.1 — Pluralbildung'
+  },
+  'KOMMASETZUNG': {
+    titel:'Kommasetzung',
+    kurz:'Vor Nebensätzen (weil, dass, obwohl, wenn) kommt ein Komma.',
+    regel:'Ein Komma steht: vor Nebensätzen (eingeleitet durch weil, dass, obwohl, wenn, als, damit), vor Relativsätzen (der, die, das), und bei Aufzählungen.',
+    beispiele:['✅ Ich lerne<b>,</b> weil ich die Prüfung bestehen will.','✅ Das Buch<b>,</b> das ich lese<b>,</b> ist spannend.','❌ Ich lerne weil ich die Prüfung bestehen will.'],
+    lp21:'D.5.F — Kommaregeln'
+  },
+  'ZEITFORM': {
+    titel:'Zeitformen',
+    kurz:'Perfekt für mündlich, Präteritum für schriftlich.',
+    regel:'Im Deutschen gibt es mehrere Zeitformen. Im Alltag und mündlich nutzt man meist das Perfekt (ich habe gemacht). Schriftlich und in Erzählungen nutzt man oft das Präteritum (ich machte).',
+    beispiele:['✅ Gestern <b>habe</b> ich Fussball <b>gespielt</b>. (Perfekt)','✅ Es <b>war</b> einmal ein König. (Präteritum)'],
+    lp21:'D.5.E.1 — Zeitformen'
+  },
+  'KASUS': {
+    titel:'Die vier Fälle (Kasus)',
+    kurz:'Nominativ (wer?), Akkusativ (wen?), Dativ (wem?), Genitiv (wessen?).',
+    regel:'Im Deutschen gibt es vier Fälle. Sie bestimmen die Form von Artikeln und Pronomen. Nominativ = Subjekt (wer?), Akkusativ = direktes Objekt (wen/was?), Dativ = indirektes Objekt (wem?), Genitiv = Besitz (wessen?).',
+    beispiele:['✅ Ich gebe <b>dem Mann</b> (Dativ) <b>den Ball</b> (Akkusativ).','❌ Ich gebe der Mann den Ball.'],
+    lp21:'D.5.E.1 — Kasus'
+  },
+  'KONJUNKTIV': {
+    titel:'Konjunktiv II',
+    kurz:'Für irreale Wünsche und höfliche Bitten: würde, hätte, wäre.',
+    regel:'Der Konjunktiv II drückt Irreales, Wünsche und Höflichkeit aus. Er wird gebildet mit «würde + Infinitiv» oder den Formen hätte, wäre, könnte, müsste.',
+    beispiele:['✅ Wenn ich reich <b>wäre</b>, <b>würde</b> ich reisen.','✅ <b>Könnten</b> Sie mir helfen?'],
+    lp21:'D.5.E.1 — Konjunktiv'
+  },
+  'STILISTIK': {titel:'Stilistik',kurz:'Abwechslungsreich schreiben, Wiederholungen vermeiden.',regel:'Guter Stil bedeutet: Satzanfänge variieren, Wiederholungen vermeiden, präzise Wörter wählen, aktive statt passive Konstruktionen bevorzugen.',beispiele:['✅ Statt «dann…dann…dann» → verschiedene Übergänge','✅ Statt «machen» → spezifischere Verben (erstellen, herstellen)'],lp21:'D.4.F — Stil'},
+  'KOHÄRENZ': {titel:'Kohärenz',kurz:'Sätze logisch verbinden, roter Faden.',regel:'Ein Text ist kohärent, wenn die Sätze logisch zusammenhängen. Verbindungswörter (deshalb, trotzdem, ausserdem) schaffen Übergänge.',beispiele:['✅ …deshalb bin ich überzeugt, dass…','✅ …andererseits muss man bedenken…'],lp21:'D.4.E — Textaufbau'},
+  'PASSIV': {titel:'Passiv',kurz:'Passiv betont die Handlung, nicht den Handelnden.',regel:'Im Passiv steht die Handlung im Vordergrund: «Der Brief wird geschrieben» statt «Ich schreibe den Brief». Gebildet mit werden + Partizip II.',beispiele:['✅ Das Buch <b>wurde</b> gelesen.','✅ Die Aufgabe <b>wird</b> morgen erledigt.'],lp21:'D.5.E.1 — Passiv'},
+  'IDIOMATIK': {titel:'Idiomatik',kurz:'Natürliche, muttersprachliche Ausdrucksweise.',regel:'Idiomatisch schreiben heisst: Redewendungen korrekt verwenden, Kollokationen beachten (man trifft eine Entscheidung, nicht macht eine Entscheidung).',beispiele:['✅ eine Entscheidung <b>treffen</b> (nicht: machen)','✅ in Betracht <b>ziehen</b> (nicht: nehmen)'],lp21:'D.5.E — Idiomatik'},
+  'REGISTER': {titel:'Register',kurz:'Sprachebene der Situation anpassen.',regel:'Register bezeichnet die Anpassung der Sprache an die Situation: formell (Bewerbung), neutral (Schulaufsatz), informell (SMS). Gutes Schreiben wählt das passende Register.',beispiele:['Formell: Sehr geehrte Frau Müller…','Neutral: Heute besprechen wir…','Informell: Hey, was geht?'],lp21:'D.5.E — Register'},
+  'DIALEKT': {titel:'Dialekt → Standarddeutsch',kurz:'Schweizerdeutsch ist toll — hier üben wir Standarddeutsch.',regel:'Im Schweizerdeutschen gibt es andere Wörter und Formen als im Standarddeutschen. Beides ist richtig! Hier üben wir Standarddeutsch für die Schule.',beispiele:['Dialekt: Ich han es Buech gläse → Standard: Ich <b>habe</b> ein <b>Buch gelesen</b>.','Dialekt: Er isch cho → Standard: Er <b>ist gekommen</b>.'],lp21:'D.5.E — Standardsprache'}
+};
+
+function showRegelkarte(typ){
+  const r=REGELKARTEN[typ];
+  if(!r)return;
+  const m=document.getElementById('regel-modal-content');
+  m.innerHTML=`<div class="regel-popup" style="border:none;padding:0;">
+    <div class="rp-title">📖 ${r.titel}</div>
+    <div class="rp-rule">${r.regel}</div>
+    <div class="rp-examples"><strong>Beispiele:</strong>${r.beispiele.map(b=>'<span>'+b+'</span>').join('')}</div>
+    ${r.lp21?'<div style="margin-top:12px;font-size:12px;color:var(--muted);font-style:italic;">LP21: '+r.lp21+'</div>':''}
+    <div style="margin-top:14px;display:flex;gap:8px;">
+      <button class="btn btn-ghost" onclick="document.getElementById(\'regel-modal\').style.display=\'none\'">Schliessen</button>
+    </div>
+  </div>`;
+  document.getElementById('regel-modal').style.display='flex';
+}
+document.getElementById('regel-modal').addEventListener('click',e=>{if(e.target.id==='regel-modal')e.target.style.display='none';});
+
+/* ═══ HILFSFUNKTIONEN ═══ */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toggleTTS(){S.ttsOn=!S.ttsOn;localStorage.setItem('satzcoach_tts',S.ttsOn?'1':'0');syncTopbar();if(S.ttsOn)speak('Vorlesen ist eingeschaltet.');else window.speechSynthesis?.cancel();}
+function speak(text,rate){if(!S.ttsOn||!text)return;window.speechSynthesis?.cancel();const clean=text.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').trim();if(!clean)return;const utt=new SpeechSynthesisUtterance(clean);utt.lang='de-CH';utt.rate=rate||0.78;utt.pitch=1.05;const voices=window.speechSynthesis?.getVoices()||[];const v=voices.find(v=>v.lang.startsWith('de')&&v.name.toLowerCase().includes('anna'))||voices.find(v=>v.lang.startsWith('de'));if(v)utt.voice=v;window.speechSynthesis?.speak(utt);}
+function SB(text,label){if(!S.ttsOn)return'';const safe=text.replace(/'/g,'&#39;').replace(/"/g,'&quot;');return`<button class="speak-btn" onclick="event.stopPropagation();speak('${safe}');this.classList.add('speaking');setTimeout(()=>this.classList.remove('speaking'),3000)">${label||'🔊'}</button>`;}
+if(window.speechSynthesis)window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+function parseJSON(f){let json=f.replace(/```json|```/g,'').trim();const s=json.indexOf('{'),e=json.lastIndexOf('}');if(s>-1&&e>-1)json=json.slice(s,e+1);return JSON.parse(json);}
+function openKey(){document.getElementById('key-modal').style.display='flex';const i=document.getElementById('key-inp');i.value=S.apiKey||'';i.focus();}
+function closeKey(){document.getElementById('key-modal').style.display='none';}
+function saveKey(){const k=document.getElementById('key-inp').value.trim();if(k){S.apiKey=k;localStorage.setItem('satzcoach_api_key',k);}closeKey();render();}
+document.getElementById('key-modal').addEventListener('click',e=>{if(e.target.id==='key-modal')closeKey();});
+document.getElementById('key-inp').addEventListener('keydown',e=>{if(e.key==='Enter')saveKey();});
+
+function go(s){S.screen=s;render();window.scrollTo(0,0);}
+function syncTopbar(){const lb=document.getElementById('ai-loading');if(lb)lb.style.display=S.aiLoading?'inline-flex':'none';const kb=document.getElementById('key-btn');if(kb){kb.className='top-btn'+(S.apiKey?' has-key':'');kb.textContent=S.apiKey?'✓ Key':'🔑 API-Key';}const pb=document.getElementById('proto-btn');if(pb)pb.style.display=PROTOKOLL.length>0?'inline-block':'none';const tt=document.getElementById('tts-toggle');if(tt){tt.textContent=S.ttsOn?'🔊 Lesen an':'🔇 Vorlesen';tt.className='top-btn'+(S.ttsOn?' active':'');}syncNiveauBtns();}
+
+function syncInputs(){
+  const vta=document.getElementById('v-ta');if(vta&&vta.value!==undefined){S.v_satz=vta.value;}
+  const kta=document.getElementById('k-ta');if(kta&&kta.value!==undefined){S.v_korrektur=kta.value;}
+}
+
+let ctrl=null;
+async function callAI(sys,msg,onPartial,onDone,maxTok){maxTok=maxTok||700;if(!S.apiKey){onDone('⚠ Kein API-Key.');return;}if(ctrl)ctrl.abort();ctrl=new AbortController();try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',signal:ctrl.signal,headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:maxTok,stream:true,system:sys,messages:[{role:'user',content:msg}]})});if(!res.ok){const err=await res.json().catch(()=>({}));if(res.status===429){const w=parseInt(err?.error?.message?.match(/(\d+)\s*seconds/)?.[1]||'30');onDone('⏳ Kurz warten ('+w+'s)…');setTimeout(()=>callAI(sys,msg,onPartial,onDone,maxTok),w*1000);return;}throw new Error(err?.error?.message||'Fehler '+res.status);}const reader=res.body.getReader();const dec=new TextDecoder();let buf='',full='';while(true){const{done,value}=await reader.read();if(done)break;buf+=dec.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop();for(const l of lines){if(!l.startsWith('data:'))continue;const d=l.slice(5).trim();if(d==='[DONE]')continue;try{const j=JSON.parse(d);if(j.type==='content_block_delta'&&j.delta?.type==='text_delta'){full+=j.delta.text;if(onPartial)onPartial(full);}}catch{}}}onDone(full||'Keine Antwort.');}catch(e){if(e.name==='AbortError')return;onDone('⚠ '+(e.message||'Verbindungsfehler'));}}
+
+/* ═══ RENDER ═══ */
+function render(){
+  syncTopbar();const app=document.getElementById('app');if(!app)return;let html='';
+  switch(S.screen){
+    case 'verbessern':html+=renderVerbessern();break;
+    case 'selfcheck':html+=renderSelfcheck();break;
+    case 'protokoll':html+=renderProtokoll();break;
+    case 'freies-schreiben':html+=renderFreiesSchreiben();break;
+    default:html+=renderHome();
+  }
+  if(S.screen!=='home')html+=`<div style="text-align:center;margin-top:8px;" class="no-print"><button class="btn btn-ghost" style="font-size:13px;" onclick="go('home')">← Startseite</button></div>`;
+  app.innerHTML=html;
+  requestAnimationFrame(syncInputs);
+}
+
+/* ═══ HOME ═══ */
+function renderHome(){
+  const niv=getNiv();
+  const streak=getStreak();
+  const rep=getRepetitionSuggestion();
+  const lz=getAdaptiveLernziel();
+  let h=`<div class="welcome">
+    <span class="welcome-emoji">${niv.emoji}</span>
+    <h1>Hallo! Ich bin dein SatzCoach! <span class="niveau-badge ${niv.badgeClass}">${niv.badge}</span></h1>
+    <p>${niv.willkommen}</p>
+  </div>`;
+
+  /* STIMMUNG (NEU 3.4) */
+  if(!S.mood){
+    h+=`<div class="mood-bar">
+      <button class="mood-btn" onclick="S.mood='😊';render()">😊</button>
+      <button class="mood-btn" onclick="S.mood='😐';render()">😐</button>
+      <button class="mood-btn" onclick="S.mood='😔';render()">😔</button>
+      <button class="mood-btn" onclick="S.mood='😤';render()">😤</button>
+    </button></div>
+    <div class="mood-label">Wie fühlst du dich gerade?</div>`;
+  } else {
+    h+=`<div class="mood-bar"><button class="mood-btn selected">${S.mood}</button></div>`;
+  }
+
+  /* STREAK (NEU 3.6) */
+  if(streak>=2){
+    h+=`<div style="text-align:center;"><div class="streak-badge">🔥 ${streak} Tage in Folge geübt — weiter so!</div></div>`;
+  }
+
+  /* ADAPTIVES LERNZIEL (NEU 2.1) */
+  if(lz){
+    h+=`<div class="lernziel-box">
+      <div class="lz-title"><span class="lz-icon">🎯</span> Dein Lernziel heute</div>
+      <div class="lz-text">${esc(lz.regel)}</div>
+      <div class="lz-auto">Basierend auf deinen letzten Übungen (häufigster Fehler: ${esc(lz.typ)}, ${lz.count}×)${lz.lp21?' · LP21: '+esc(lz.lp21):''}</div>
+    </div>`;
+    S.lernziel=lz.regel;
+  }
+
+  /* WIEDERHOLUNG (NEU 1.5) */
+  if(rep){
+    h+=`<div class="card" style="border-color:rgba(251,191,36,0.3);">
+      <div class="card-title" style="font-size:18px;">🔄 Wiederholung</div>
+      <div class="card-sub" style="font-size:15px;">Diesen Satz hattest du vor kurzem — versuch es nochmal!</div>
+      <div class="original-satz"><div style="flex:1"><span class="label">Originalsatz:</span>${esc(rep.original)}</div></div>
+      <button class="btn btn-primary" onclick="S.v_satz='${rep.original.replace(/'/g,"\\'")}';go('verbessern')">🔁 Nochmals üben</button>
+    </div>`;
+  }
+
+  /* START-KARTEN */
+  h+=`<div class="start-card" onclick="go('verbessern')" style="margin-bottom:12px;">
+    <span class="emoji">🔍</span>
+    <div class="title">Satz prüfen</div>
+    <div class="desc">${S.niveau==='A'?'Schreib einen Satz — ich helfe dir Schritt für Schritt':S.niveau==='B'?'Grammatik, Zeitformen und Satzbau analysieren':'Grammatik, Stil und Ausdruck auf C-Niveau prüfen'}</div>
+  </div>`;
+
+  /* SELBSTCHECK (NEU 3.3) */
+  h+=`<div class="selfcheck-card" onclick="S.selfcheckMode=true;go('verbessern')">
+    <span class="emoji">🧠</span>
+    <div class="title">Selbstcheck</div>
+    <div class="desc">Finde deine eigenen Fehler — dann vergleiche mit der KI!</div>
+  </div>`;
+
+  h+=`<div class="start-card" onclick="go('freies-schreiben')" style="margin-top:12px;background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(167,139,250,0.05));border-color:rgba(96,165,250,0.3);">
+    <span class="emoji">📄</span>
+    <div class="title">Freies Schreiben</div>
+    <div class="desc">${S.niveau==='A'?'Schreib mehrere Sätze — der Coach gibt dir ganzheitliches Feedback':S.niveau==='B'?'Absatz schreiben — Grammatik, Zusammenhang, Wortwahl analysieren':'Absatz oder Text — Stil, Kohärenz und Idiomatik prüfen'}</div>
+  </div>`;
+
+  h+=`${!S.apiKey?'<div class="fb warn" style="margin-top:16px;">⚠ Noch kein API-Key. Klick oben auf <strong>🔑 API-Key</strong>.</div>':''}`;
+  return h;
+}
+
+function vollReset(){S.v_satz='';S.v_phase=0;S.v_analyse=null;S.v_korrektur='';S.v_pasted=false;S.v_korrResult=null;S.v_aufgedeckt=[];S.v_planChecks=[];S.aiLoading=false;S.selfcheckMode=false;S.sc_eigeneFehler=[];S.lernzielErreicht=null;S.impuls=null;window.speechSynthesis?.cancel();render();}
+
+/* ═══ VERBESSERN — 5-Phasen-Modell (NEU: Phase 2 = Planen) ═══ */
+function renderVerbessern(){
+  const p=S.v_phase, niv=getNiv();
+  /* NEU: 5 Schritte statt 4 */
+  const sch=[{n:'1',l:'Schreiben'},{n:'2',l:'Verstehen'},{n:'3',l:'Planen'},{n:'4',l:'Korrigieren'},{n:'5',l:'Ins Heft'}];
+  let body=`<div class="schritte">${sch.map((s,i)=>`<div class="schritt ${i<p?'done':i===p?'now':''}"><span class="schritt-num">${i<p?'✓':s.n}</span>${s.l}</div>`).join('')}</div>`;
+
+  /* PHASE 0: Schreiben */
+  if(p===0){
+    body+=`<div class="card">
+      <div class="card-title">${niv.emoji} ${S.selfcheckMode?'🧠 Selbstcheck':'Schreib deinen Satz'} <span class="niveau-badge ${niv.badgeClass}" style="font-size:11px;">${niv.badge}</span></div>
+      <div class="card-sub">${S.selfcheckMode?'Schreib einen Satz, prüfe ihn selbst, dann vergleiche mit der KI!':niv.willkommen}</div>`;
+    /* IMPULSE (NEU 1.4) */
+    if(!S.impuls){
+      const imps=IMPULSE[S.niveau]||IMPULSE.A;
+      body+=`<div class="slabel">💡 Brauchst du eine Idee? Klick einen Anfang:</div>
+        <div class="impuls-grid">${imps.slice(0,4).map(imp=>`<div class="impuls-card" onclick="S.impuls='${imp.text}';S.v_satz='${imp.text}';render()"><span class="imp-emoji">${imp.emoji}</span><span class="imp-text">${imp.text}</span></div>`).join('')}</div>
+        <div style="margin-bottom:16px;"></div>`;
+    }
+    body+=`<textarea id="v-ta" placeholder="${niv.beispielSatz}" rows="3"
+        oninput="S.v_satz=this.value;document.getElementById('v-cc').textContent=this.value.length+' Zeichen'"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">${esc(S.v_satz)}</textarea>
+      <div class="char-count" id="v-cc">${S.v_satz.length} Zeichen</div>
+      <div class="hint">${niv.hinweis}</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="analysiereAbsicht()">${S.aiLoading?'<span class="cur"></span> Analysiere…':'🔍 Satz analysieren'}</button>
+        <button class="btn btn-ghost" onclick="vollReset()">🔄 Alles neu</button>
+      </div></div>${renderHilfe()}`;
+  }
+
+  /* PHASE 1: Verstehen */
+  if(p===1&&S.v_analyse){
+    const a=S.v_analyse;
+    const aufgList=S.v_aufgedeckt||[];
+    const allAuf=(a.fehler&&a.fehler.length>0)?aufgList.length>=a.fehler.length:true;
+
+    /* SELBSTCHECK-VERGLEICH (NEU 3.3) */
+    let scVergleich='';
+    if(S.selfcheckMode&&S.sc_eigeneFehler.length>0&&a.fehler){
+      const kiFehler=a.fehler.map(f=>f.typ);
+      const gefunden=S.sc_eigeneFehler.filter(t=>kiFehler.includes(t));
+      scVergleich=`<div class="fb ${gefunden.length>=kiFehler.length?'good':'info'}" style="margin-bottom:14px;">
+        <div class="fb-label">🧠 Selbstcheck-Ergebnis</div>
+        Du hast <strong>${gefunden.length} von ${kiFehler.length}</strong> Fehlertypen selbst erkannt! ${gefunden.length>=kiFehler.length?'🎉 Perfekt — du brauchst die KI fast nicht mehr!':'Weiter üben — du wirst immer besser!'}
+      </div>`;
+    }
+
+    body+=`<div class="card">
+      <div class="card-title">🔍 Analyse <span class="niveau-badge ${niv.badgeClass}" style="font-size:11px;">${niv.badge}</span></div>
+      <div class="original-satz"><div style="flex:1"><span class="label">✏️ Dein Satz:</span>${esc(S.v_satz)}</div>${SB(S.v_satz)}</div>
+      ${scVergleich}
+      ${a.rückfrage?`<div class="fb frage"><div class="fb-label">❓ Rückfrage</div>${esc(a.rückfrage)}<div class="btn-row" style="margin-top:10px;"><input style="flex:1;padding:12px 16px;border-radius:100px;background:rgba(255,255,255,0.06);border:1.5px solid var(--card-b);color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;" id="rq-inp" placeholder="Deine Antwort…" onkeydown="if(event.key==='Enter')antwortRückfrage()"/><button class="btn btn-primary" onclick="antwortRückfrage()">Antworten</button></div></div>`:''}
+      <div class="fb absicht"><div class="fb-label">🧠 Das meinst du ${SB(a.absicht)}</div>${esc(a.absicht)}</div>
+      ${a.interpretationen&&a.interpretationen.length?`<div class="fb info"><div class="fb-label">🔄 Andere Bedeutungen:</div>${a.interpretationen.map(interp=>`<div style="margin-top:8px;"><button class="btn btn-ghost" style="font-size:15px;padding:10px 18px;width:100%;text-align:left;" onclick="wähleInterpretation(\`${interp.replace(/`/g,'')}\`)">${esc(interp)}</button></div>`).join('')}</div>`:''}
+      ${a.fehler&&a.fehler.length?`<div style="margin-top:18px;"><div class="slabel">🖊️ Klick auf jeden Fehler — lies ihn genau!</div>${a.fehler.map((f,i)=>{const aufg=aufgList.includes(i);return `<div class="fehler-card${aufg?' aufgedeckt':''}" id="fehler-${i}" onclick="deckeAuf(${i},'${(f.erklärung||'').replace(/'/g,"\\'")}')"><div class="fehler-typ"><span class="fehler-num">${i+1}</span><span onclick="event.stopPropagation();showRegelkarte('${f.typ}')" style="cursor:pointer;text-decoration:underline;text-decoration-style:dotted;">${esc(f.typ)}</span> <span style="font-size:9px;opacity:0.5;cursor:pointer;" onclick="event.stopPropagation();showRegelkarte('${f.typ}')">📖</span>${aufg?'<span style="margin-left:auto;">✓</span>':'<span style="margin-left:auto;font-size:12px;opacity:0.6;">👆 anklicken</span>'}</div>${aufg?`<div class="fehler-aufgedeckt-inhalt"><div style="font-size:16px;line-height:1.7;">${esc(f.erklärung)}</div>${f.beispiel?`<div class="beispiel-pill">💡 ${esc(f.beispiel)}</div>`:''}</div>`:`<div class="fehler-verdeckt"><div style="font-size:15px;">${esc(f.erklärung)}</div>${f.beispiel?`<div class="beispiel-pill">💡 ${esc(f.beispiel)}</div>`:''}</div><div class="klick-hint">👆 Klick zum Aufdecken</div>`}</div>`;}).join('')}</div>`
+      :'<div class="fb good" style="margin-top:16px;">✅ Keine Fehler — sehr gut!</div>'}
+      ${allAuf?`<div style="text-align:center;margin-top:18px;"><button class="btn btn-primary" style="font-size:17px;padding:15px 28px;" onclick="S.v_phase=2;render();window.scrollTo(0,0);">Weiter → Planen</button></div>`:''}
+    </div>${renderHilfe()}`;
+  }
+
+  /* PHASE 2: PLANEN (NEU 1.2) */
+  if(p===2){
+    const checks=niv.planChecks||[];
+    const allChecked=S.v_planChecks.length>=checks.length;
+    body+=`<div class="plan-box">
+      <div style="font-size:52px;margin-bottom:12px;">🗺️</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:var(--violet);margin-bottom:8px;">Bevor du korrigierst — denke kurz nach!</div>
+      <div style="font-size:16px;color:var(--muted);margin-bottom:6px;line-height:1.7;">Geh diese Checkliste durch. Klick auf jeden Punkt:</div>
+      <div class="plan-checklist">${checks.map((c,i)=>`<div class="plan-check ${S.v_planChecks.includes(i)?'checked':''}" onclick="togglePlanCheck(${i})"><span class="check-icon">${S.v_planChecks.includes(i)?'✅':'⬜'}</span>${esc(c)}</div>`).join('')}</div>
+      ${allChecked?`<div style="margin-top:20px;"><div class="hint" style="text-align:center;">✍️ <strong>Jetzt selbst schreiben!</strong> Tipp den richtigen Satz — kein Kopieren!</div>
+        <textarea id="k-ta" class="korr-ta" placeholder="Schreib deinen verbesserten Satz…" rows="3"
+          oninput="S.v_korrektur=this.value;S.v_pasted=false;"
+          onpaste="blockPaste(event)" oncontextmenu="blockContextMenu(event)"
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">${esc(S.v_korrektur)}</textarea>
+        <div id="paste-hinweis" style="display:none;margin-top:8px;" class="fb bad">✋ Kopieren nicht erlaubt! Schreib den Satz selbst.</div>
+        <div class="btn-row" style="justify-content:center;">
+          <button class="btn btn-primary" onclick="prüfeKorrektur()">${S.aiLoading?'<span class="cur"></span> Prüfe…':'✅ Korrektur prüfen'}</button>
+          <button class="btn btn-ghost" onclick="S.v_phase=1;S.v_planChecks=[];render()">← Zurück</button>
+        </div>
+        <div id="k-result-box"></div>
+      </div>`:'<div style="margin-top:12px;font-size:14px;color:var(--muted);">Klick alle Punkte an, dann geht es weiter.</div>'}
+    </div>`;
+  }
+
+  /* PHASE 3: Korrektur-Ergebnis (war Phase 2) */
+  if(p===3&&S.v_korrResult){
+    const res=S.v_korrResult;
+    body+=`<div class="card">
+      ${res.richtig?`<div class="erfolg"><span class="erfolg-stars">⭐⭐⭐</span><div class="erfolg-msg">Super gemacht!</div><div style="font-size:16px;color:var(--muted);margin-top:6px;">${esc(res.lob)}</div></div>`:`<div class="fb warn"><div class="fb-label">⚠️ Fast richtig! ${SB(res.lob)}</div>${esc(res.lob)}</div>`}
+      ${res.restfehler?`<div class="fb warn"><div class="fb-label">⚠️ ${SB(res.restfehler)}</div>${esc(res.restfehler)}</div>`:''}
+      <div class="haftkorrektur"><span class="haft-label">✅ So ist es richtig:</span>${esc(res.korrekt)} ${SB(res.korrekt)}</div>
+      <div class="fb info" style="font-size:15px;"><div class="fb-label">Vorher → Nachher</div><span style="opacity:0.5;text-decoration:line-through;">${esc(S.v_satz)}</span><br>→ <strong>${esc(S.v_korrektur)}</strong></div>
+      <div class="ausblend-box" style="margin-top:20px;">
+        <div style="font-size:52px;margin-bottom:12px;">🙈</div>
+        <div style="font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:var(--violet);margin-bottom:10px;">Haftkorrektur einprägen — dann ausblenden!</div>
+        <div style="font-size:15px;color:var(--muted);margin-bottom:20px;line-height:1.7;">Schau dir den richtigen Satz gut an.<br>Dann klick — und schreib ihn aus der Erinnerung ins Heft!</div>
+        <button class="btn" style="background:var(--violet);color:#fff;font-size:17px;padding:15px 30px;" onclick="S.v_phase=4;render();window.scrollTo(0,0);">🙈 Alles ausblenden</button>
+      </div>
+    </div>`;
+  }
+
+  /* PHASE 4: Ins Heft (war Phase 3) */
+  if(p===4){
+    body+=`<div class="heft-box">
+      <div style="font-size:60px;margin-bottom:16px;">📓</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;color:var(--lime);margin-bottom:12px;">Hast du den Satz ins Heft geschrieben?</div>
+      <div style="font-size:16px;color:var(--muted);margin-bottom:28px;line-height:1.8;">Schreib mit deiner Handschrift — <strong>ohne</strong> auf den Bildschirm zu schauen!</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+        <button class="btn btn-green" style="font-size:18px;padding:17px 34px;" onclick="S.v_phase=5;render();window.scrollTo(0,0);">✅ Ja, ins Heft geschrieben!</button>
+        <button class="btn btn-primary" style="font-size:17px;padding:15px 28px;margin-top:4px;" onclick="vollReset()">➡️ Neue Aufgabe</button>
+        <button class="btn btn-ghost" style="font-size:14px;" onclick="S.v_phase=3;render();window.scrollTo(0,0);">👀 Nochmals anschauen</button>
+        <button class="btn btn-ghost" style="font-size:14px;" onclick="S.v_phase=1;render();window.scrollTo(0,0);">💬 Frage stellen</button>
+      </div>
+    </div>`;
+  }
+
+  /* PHASE 5: Reflexion + Geschafft (NEU 2.1) */
+  if(p===5&&S.v_korrResult){
+    const res=S.v_korrResult;
+    body+=`<div class="card">
+      <div class="card-title" style="color:var(--lime);">🎉 Geschafft!</div>`;
+    /* REFLEXION: Lernziel erreicht? (NEU 2.1) */
+    if(S.lernziel){
+      body+=`<div class="reflexion-box">
+        <div style="font-size:18px;font-weight:800;color:var(--accent);margin-bottom:8px;">🎯 Hast du dein Lernziel erreicht?</div>
+        <div style="font-size:15px;color:var(--muted);margin-bottom:14px;line-height:1.6;">«${esc(S.lernziel)}»</div>
+        <div class="reflexion-btns">
+          <button class="refl-btn ${S.lernzielErreicht===true?'selected':''}" onclick="S.lernzielErreicht=true;render();">👍 Ja!</button>
+          <button class="refl-btn ${S.lernzielErreicht===false?'selected':''}" onclick="S.lernzielErreicht=false;render();">👎 Noch nicht</button>
+        </div>
+      </div>`;
+    }
+    /* STIMMUNG DANACH (NEU 3.4) */
+    body+=`<div style="text-align:center;margin:14px 0;">
+      <div style="font-size:15px;color:var(--muted);margin-bottom:10px;">Wie war diese Übung?</div>
+      <div class="mood-bar" style="margin:8px 0">
+        <button class="mood-btn" onclick="logMoodAfter('😊')">😊</button>
+        <button class="mood-btn" onclick="logMoodAfter('😐')">😐</button>
+        <button class="mood-btn" onclick="logMoodAfter('😔')">😔</button>
+      </div>
+    </div>`;
+    body+=`<div class="card-sub">Hier ist der richtige Satz nochmals:</div>
+      <div class="haftkorrektur"><span class="haft-label">📌 Musterlösung:</span>${esc(res.korrekt)}</div>
+      <div class="fb info" style="font-size:15px;"><div class="fb-label">Dein Lernweg</div>
+        <div style="font-size:13px;opacity:0.5;text-decoration:line-through;">${esc(S.v_satz)}</div>
+        <div style="font-size:13px;opacity:0.7;margin-top:4px;">Deine Korrektur: ${esc(S.v_korrektur)}</div>
+        <div style="margin-top:6px;">→ <strong>${esc(res.korrekt)}</strong></div>
+      </div>
+      <div style="text-align:center;margin-top:24px;">
+        <button class="btn btn-green" style="font-size:18px;padding:17px 34px;" onclick="vollReset()">➡️ Nächster Satz</button>
+      </div>
+    </div>`;
+  }
+
+  return body;
+}
+
+function logMoodAfter(emoji){
+  if(PROTOKOLL.length>0){
+    PROTOKOLL[PROTOKOLL.length-1].moodAfter=emoji;
+    saveProtokoll();
+  }
+}
+
+function togglePlanCheck(i){
+  if(S.v_planChecks.includes(i))S.v_planChecks=S.v_planChecks.filter(x=>x!==i);
+  else S.v_planChecks.push(i);
+  render();
+}
+
+function deckeAuf(idx,erklaerung){
+  if(!S.v_aufgedeckt)S.v_aufgedeckt=[];
+  if(S.v_aufgedeckt.includes(idx))return;
+  S.v_aufgedeckt.push(idx);
+  const card=document.getElementById('fehler-'+idx);
+  if(card){card.classList.add('aufgedeckt');const vd=card.querySelector('.fehler-verdeckt');const kh=card.querySelector('.klick-hint');if(vd)vd.classList.replace('fehler-verdeckt','fehler-aufgedeckt-inhalt');if(kh)kh.remove();}
+  speak(erklaerung);
+  /* Check if all revealed → show "Weiter" button */
+  const a=S.v_analyse;
+  if(a&&a.fehler&&S.v_aufgedeckt.length>=a.fehler.length){render();}
+}
+
+function blockPaste(e){e.preventDefault();S.v_pasted=true;const ta=document.getElementById('k-ta');if(ta){ta.classList.add('paste-warn');setTimeout(()=>ta.classList.remove('paste-warn'),600);}const h=document.getElementById('paste-hinweis');if(h){h.style.display='block';setTimeout(()=>h.style.display='none',3500);}}
+function blockContextMenu(e){e.preventDefault();}
+function antwortRückfrage(){const inp=document.getElementById('rq-inp');if(!inp||!inp.value.trim())return;S.v_analyse.rückfrage=null;S.v_analyse.absicht+=' (Du hast erklärt: '+inp.value.trim()+')';render();}
+
+/* ═══ SELBSTCHECK-MODUS (NEU 3.3) ═══ */
+function renderSelfcheck(){/* redirected to verbessern with selfcheckMode flag */return renderVerbessern();}
+
+/* ═══ ANALYSE-ABSICHT — mit adaptiven Prompts (NEU 1.3) ═══ */
+function analysiereAbsicht(){
+  const ta=document.getElementById("v-ta");if(ta)S.v_satz=ta.value;
+  const satz=S.v_satz.trim();
+  if(!satz){alert('Bitte zuerst einen Satz schreiben!');return;}
+  if(!S.apiKey){openKey();return;}
+  if(S.aiLoading)return;
+
+  /* SELBSTCHECK: Erst eigene Fehler sammeln (NEU 3.3) */
+  if(S.selfcheckMode&&S.sc_eigeneFehler.length===0){
+    S.screen='selfcheck-input';render();return;
+  }
+
+  S.aiLoading=true;S.v_aufgedeckt=[];render();
+  speak('Ich schaue mir deinen Satz an...');
+  const niv2=getNiv();
+
+  /* ADAPTIVE PROMPT-ERWEITERUNG (NEU 1.3) */
+  let adaptiveHint='';
+  const lz=getAdaptiveLernziel();
+  if(lz){adaptiveHint=`\nWICHTIG: Dieser Schüler macht häufig Fehler bei ${lz.typ} (${lz.count}× in den letzten Übungen). Achte besonders darauf und gib bei diesem Fehlertyp eine ausführlichere Erklärung.`;}
+
+  const sysPrompt=S.niveau==='A'
+?`Du bist ein einfühlsamer Satz-Coach für ${niv2.zielgruppe}.
+AUFGABE: Verstehe ABSICHT und BEDEUTUNG. Schüler machen Tippfehler, Dialekt, phonetisches Schreiben.
+SEMANTIK: "ich nicht gern will kann kommen Schule"→"Ich will/kann nicht gern in die Schule kommen."
+VERB BEIBEHALTEN. MEHRERE INTERPRETATIONEN nur wenn wirklich mehrdeutig.
+FEHLER-PRIORITÄT: 1.Wortstellung/Verb 2.Rechtschreibung/Artikel 3.Gross-Klein/Satzzeichen
+SATZZEICHEN: Fehlt Punkt/Fragezeichen? IMMER melden!${adaptiveHint}
+JSON(kein Markdown):{"absicht":"Interpretation","interpretationen":["Alt1"],"rückfrage":null,"fehler":[{"typ":"WORTSTELLUNG","erklärung":"max 20 Wörter","beispiel":"Richtig wäre: …"}],"alternativ":""}
+Typen:WORTSTELLUNG,VERB-FORM,ARTIKEL,RECHTSCHREIBUNG,GROSS-KLEIN,SATZZEICHEN,MEHRZAHL,DIALEKT
+Max 3 Fehler. NICHT den ganzen korrekten Satz zeigen!`
+:S.niveau==='B'
+?`Du bist ein kompetenter Satz-Coach für ${niv2.zielgruppe}(B1-B2).
+AUFGABE: Grammatik und Stilistik auf B1-B2 analysieren.
+FEHLER-FOKUS:1.Kommasetzung 2.Zeitformen 3.Kasus 4.Konjunktiv II 5.Wortstellung Nebensatz 6.Passiv 7.Satzzeichen${adaptiveHint}
+JSON(kein Markdown):{"absicht":"Paraphrase","interpretationen":[],"rückfrage":null,"fehler":[{"typ":"KOMMASETZUNG","erklärung":"max 25 Wörter","beispiel":"Richtig wäre: …"}],"alternativ":""}
+Typen:KOMMASETZUNG,ZEITFORM,KASUS,KONJUNKTIV,WORTSTELLUNG,PASSIV,ARTIKEL,RECHTSCHREIBUNG,GROSS-KLEIN,SATZZEICHEN
+Max 4 Fehler. NICHT den ganzen korrekten Satz zeigen!`
+:`Du bist ein anspruchsvoller Satz-Coach für ${niv2.zielgruppe}(C1-C2).
+AUFGABE: Grammatik, Stilistik, Präzision, Idiomatik analysieren.
+FEHLER-FOKUS:1.Stilistik/Wortwahl 2.Kohärenz 3.Konjunktiv II 4.Passiv 5.Zeitenfolge 6.Kommasetzung 7.Kasus 8.Idiomatik${adaptiveHint}
+JSON(kein Markdown):{"absicht":"Paraphrase","interpretationen":[],"rückfrage":null,"fehler":[{"typ":"STILISTIK","erklärung":"max 30 Wörter","beispiel":"Besser wäre: …"}],"alternativ":""}
+Typen:STILISTIK,KOHÄRENZ,KONJUNKTIV,ZEITENFOLGE,KOMMASETZUNG,KASUS,PASSIV,IDIOMATIK,REGISTER,RECHTSCHREIBUNG,SATZZEICHEN
+Max 5 Anmerkungen. NICHT den kompletten Satz zeigen!`;
+  callAI(sysPrompt,`Analysiere: "${satz}"`,null,(f)=>{
+    S.aiLoading=false;
+    try{S.v_analyse=parseJSON(f);}catch{S.v_analyse={absicht:'Ich habe deinen Satz gelesen.',rückfrage:null,fehler:[]};}
+    S.v_phase=1;S.screen='verbessern';render();
+    if(S.ttsOn&&S.v_analyse){let t='Das meinst du: '+S.v_analyse.absicht+'. ';if(S.v_analyse.fehler&&S.v_analyse.fehler.length){t+='Du kannst verbessern: ';S.v_analyse.fehler.forEach((f,i)=>{t+=(i+1)+'. '+f.erklärung+'. ';});}else t+='Keine Fehler gefunden.';speak(t);}
+  },500);
+}
+
+function wähleInterpretation(interp){
+  S.v_analyse.absicht=interp;S.aiLoading=true;render();
+  const satz=S.v_satz.trim();
+  callAI(`Du bist ein Satz-Coach. Schüler schrieb: "${satz}". Gewählte Bedeutung: "${interp}".
+Analysiere FEHLER basierend auf dieser Bedeutung.
+JSON:{"fehler":[{"typ":"WORTSTELLUNG","erklärung":"max 20 Wörter","beispiel":"Richtig wäre: …"}]}
+Max 3 Fehler. Konkrete Beispiele!`,`Analysiere: "${satz}"`,null,(f)=>{
+    S.aiLoading=false;try{const res=parseJSON(f);S.v_analyse.fehler=res.fehler||[];S.v_analyse.interpretationen=[];}catch{S.v_analyse.fehler=[];}render();
+  },400);
+}
+
+function prüfeKorrektur(){
+  const kta=document.getElementById("k-ta");if(kta)S.v_korrektur=kta.value;
+  const original=S.v_satz.trim(),korrektur=S.v_korrektur.trim(),absicht=S.v_analyse?.absicht||'';
+  if(!korrektur){alert('Bitte zuerst deinen verbesserten Satz schreiben!');return;}
+  if(!S.apiKey){openKey();return;}
+  if(S.aiLoading)return;
+  S.aiLoading=true;
+  const rb=document.getElementById('k-result-box');
+  if(rb)rb.innerHTML='<div class="fb ai" style="text-align:center;padding:24px;"><span class="cur"></span> Ich prüfe deine Korrektur…</div>';
+  syncTopbar();speak('Ich prüfe deine Korrektur...');
+  const niv3=getNiv();
+  const korrSys=S.niveau==='A'
+?`Du bist ein präziser Satz-Coach für ${niv3.zielgruppe}.
+Original:"${original}"
+Absicht (was der Schüler meinte):"${absicht}"
+Korrektur des Schülers:"${korrektur}"
+
+WICHTIGSTE REGEL — VOLLSTÄNDIGKEIT:
+Vergleiche die Korrektur WORT FÜR WORT mit der Absicht.
+Fehlt ein inhaltliches Wort aus der Absicht? → "richtig":false, Fehler melden!
+Beispiel: Absicht="Ich fühle mich recht wohl" aber Korrektur="Ich fühle mich wohl" → FEHLER! Das Wort "recht" fehlt!
+Synonyme sind OK (z.B. "wohl/gut"), aber weggelassene Wörter sind IMMER ein Fehler.
+
+PRÜFE DANN:
+1. VOLLSTÄNDIGKEIT: Sind alle Wörter der Absicht vorhanden?
+2. Verb-Form (ich gehe, er geht…)
+3. Wortstellung (Verb an 2. Stelle)
+4. Artikel und Kasus
+5. Gross-/Kleinschreibung
+6. Satzzeichen (Punkt, Fragezeichen am Ende!)
+7. Rechtschreibung
+
+"richtig":true NUR wenn ALLES stimmt UND kein Wort fehlt!
+JSON:{"richtig":true/false,"lob":"Ermutigend, 1 Satz","restfehler":"Was fehlt oder falsch ist — leer wenn perfekt","korrekt":"Perfekter vollständiger Satz"}`
+:S.niveau==='B'
+?`Du bist ein präziser Satz-Coach für ${niv3.zielgruppe} (B1-B2).
+Original:"${original}"
+Absicht (was der Schüler meinte):"${absicht}"
+Korrektur des Schülers:"${korrektur}"
+
+WICHTIGSTE REGEL — VOLLSTÄNDIGKEIT:
+Vergleiche die Korrektur WORT FÜR WORT mit der Absicht.
+Fehlt ein inhaltliches Wort oder eine Phrase aus der Absicht? → "richtig":false!
+Weggelassene Adverbien, Adjektive oder Satzteile sind IMMER Fehler.
+Synonyme sind erlaubt, aber Auslassungen nie!
+
+PRÜFE DANN:
+1. VOLLSTÄNDIGKEIT: Alle Wörter der Absicht vorhanden?
+2. Kommasetzung (vor Nebensätzen, Relativsätzen!)
+3. Zeitformen (Perfekt/Präteritum, Plusquamperfekt)
+4. Kasus (nach Präpositionen)
+5. Konjunktiv II
+6. Wortstellung in Nebensätzen (Verb am Ende!)
+7. Satzzeichen und Rechtschreibung
+
+"richtig":true NUR wenn ALLES stimmt!
+JSON:{"richtig":true/false,"lob":"1 Satz","restfehler":"Konkret was fehlt oder falsch — leer wenn perfekt","korrekt":"Perfekter vollständiger Satz"}`
+:`Du bist ein anspruchsvoller Satz-Coach für ${niv3.zielgruppe} (C1-C2).
+Original:"${original}"
+Absicht:"${absicht}"
+Korrektur:"${korrektur}"
+
+WICHTIGSTE REGEL — VOLLSTÄNDIGKEIT:
+Jedes inhaltliche Element der Absicht muss in der Korrektur vorhanden sein.
+Fehlende Adverbien, Adjektive, Nebensätze oder Phrasen → "richtig":false!
+
+PRÜFE DANN:
+1. VOLLSTÄNDIGKEIT: Alle inhaltlichen Elemente vorhanden?
+2. Stilistik und Präzision der Wortwahl
+3. Kohärenz und Struktur
+4. Konjunktiv II (Irrealis, indirekte Rede)
+5. Passiv- und Partizipialkonstruktionen
+6. Zeitenfolge
+7. Kommasetzung bei komplexen Satzgefügen
+8. Kasus, Idiomatik, Register
+
+"richtig":true NUR wenn grammatisch, stilistisch UND inhaltlich vollständig korrekt!
+JSON:{"richtig":true/false,"lob":"1 Satz","restfehler":"Konkret was fehlt oder falsch — leer wenn perfekt","korrekt":"Perfekter vollständiger Satz"}`;
+  callAI(korrSys,'Bewerte meine Korrektur.',null,(f)=>{
+    S.aiLoading=false;
+    let res;try{res=parseJSON(f);}catch{res={richtig:true,lob:'Du hast es versucht!',restfehler:'',korrekt:korrektur};}
+    S.v_korrResult=res;
+    PROTOKOLL.push({datum:new Date().toLocaleDateString('de-CH'),zeit:new Date().toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'}),original,absicht,korrektur,korrekt:res.korrekt||korrektur,richtig:res.richtig||false,lob:res.lob||'',restfehler:res.restfehler||'',fehlerTypen:(S.v_analyse?.fehler||[]).map(f=>f.typ),niveau:S.niveau,mood:S.mood||null,selfcheck:S.selfcheckMode,lernziel:S.lernziel||''});
+    saveProtokoll();S.v_phase=3;syncTopbar();render();window.scrollTo(0,0);
+    if(S.ttsOn){let t=res.richtig?'Super gemacht! '+res.lob:'Fast richtig. '+res.lob;speak(t);}
+  },600);
+}
+
+/* ═══ PROTOKOLL (erweitert: LP21, Export, Stimmung) ═══ */
+function zeigeProtokoll(){S.screen='protokoll';render();window.scrollTo(0,0);}
+
+function renderProtokoll(){
+  const p=PROTOKOLL,total=p.length,richtig=p.filter(e=>e.richtig).length;
+  const quote=total>0?Math.round(richtig/total*100):0;
+  const fehlerCount={};
+  p.forEach(e=>(e.fehlerTypen||[]).forEach(t=>{fehlerCount[t]=(fehlerCount[t]||0)+1;}));
+  const topFehler=Object.entries(fehlerCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+
+  let h=`<div class="card"><div class="card-title">📊 Lernprotokoll</div>
+    <div class="card-sub">${total} Sätze geübt — ${richtig} auf Anhieb richtig (${quote}%)</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;">
+      <div style="flex:1;height:12px;background:var(--card-b);border-radius:8px;overflow:hidden;">
+        <div style="height:100%;width:${quote}%;background:${quote>=70?'var(--lime)':quote>=40?'var(--gold)':'var(--coral)'};border-radius:8px;"></div>
+      </div>
+      <span style="font-size:14px;font-weight:800;color:${quote>=70?'var(--lime)':quote>=40?'var(--gold)':'var(--coral)'};">${quote}%</span>
+    </div>`;
+
+  if(topFehler.length>0){
+    h+=`<div class="slabel">Häufigste Fehlertypen: <span style="font-size:10px;opacity:0.5;">(klick für Regelkarte)</span></div>`;
+    topFehler.forEach(([typ,cnt])=>{
+      const pct=Math.round(cnt/total*100);
+      const r=REGELKARTEN[typ];
+      h+=`<div style="display:flex;align-items:center;gap:10px;margin:6px 0;cursor:pointer;" onclick="showRegelkarte('${typ}')">
+        <div style="width:130px;font-size:14px;font-weight:700;text-decoration:underline;text-decoration-style:dotted;">${esc(typ)}</div>
+        <div style="flex:1;height:8px;background:var(--card-b);border-radius:8px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:var(--gold);border-radius:8px;"></div></div>
+        <span style="font-size:13px;color:var(--muted);">${cnt}×</span>
+        ${r&&r.lp21?`<span style="font-size:10px;color:var(--sky);opacity:0.7;">${r.lp21.split('—')[0]}</span>`:''}
+      </div>`;
+    });
+  }
+
+  /* KI-ANALYSE + EXPORT (NEU 3.5, 4.1) */
+  h+=`<div class="btn-row" style="margin-top:18px;">`;
+  if(total>=3)h+=`<button class="btn btn-primary" onclick="kiAnalyse()">🤖 KI-Analyse</button>`;
+  h+=`<button class="btn btn-ghost" onclick="exportProtokoll()">📥 Export (JSON)</button>
+    <button class="btn btn-ghost" onclick="window.print()">🖨️ Drucken / PDF</button>
+  </div><div id="ki-analyse-box"></div></div>`;
+
+  /* ALLE SÄTZE */
+  h+=`<div class="card"><div class="card-title">📝 Alle Sätze</div>`;
+  p.slice().reverse().forEach((e,i)=>{
+    h+=`<div style="padding:14px 0;${i>0?'border-top:1px solid var(--card-b);':''}font-size:15px;">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;">
+        <span style="font-size:12px;color:var(--faint);">${esc(e.datum)} ${esc(e.zeit)} ${e.mood?e.mood:''} ${e.moodAfter?'→'+e.moodAfter:''}</span>
+        <span style="font-size:12px;font-weight:800;color:${e.richtig?'var(--lime)':'var(--gold)'};">${e.richtig?'✓ Richtig':'⚠ Fehler'}${e.selfcheck?' 🧠':''}</span>
+      </div>
+      <div style="margin-top:6px;opacity:0.5;text-decoration:line-through;">${esc(e.original)}</div>
+      <div style="margin-top:4px;">→ <strong>${esc(e.korrekt)}</strong></div>
+      ${(e.fehlerTypen&&e.fehlerTypen.length)?`<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px;">
+        ${e.fehlerTypen.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:6px;background:var(--gold-l);color:var(--gold);font-weight:700;cursor:pointer;" onclick="showRegelkarte('${t}')">${esc(t)}</span>`).join('')}</div>`:''}
+    </div>`;
+  });
+  h+=`</div>`;
+  h+=`<div style="text-align:center;margin-top:10px;">
+    <button class="btn btn-ghost" style="font-size:13px;color:var(--coral);border-color:var(--coral);" onclick="if(confirm('Protokoll wirklich löschen?')){PROTOKOLL=[];saveProtokoll();S.screen='home';render();}">🗑️ Protokoll löschen</button></div>`;
+  return h;
+}
+
+/* EXPORT (NEU 4.1) */
+function exportProtokoll(){
+  const data=JSON.stringify(PROTOKOLL,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='satzcoach_protokoll_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(url);
+}
+
+function kiAnalyse(){
+  if(!S.apiKey){openKey();return;}
+  const box=document.getElementById('ki-analyse-box');if(!box)return;
+  S.aiLoading=true;syncTopbar();
+  const niv=getNiv();
+  box.innerHTML='<div class="fb ai" style="text-align:center;padding:20px;margin-top:14px;"><span class="cur"></span> Analyse wird erstellt…</div>';
+  const zusammenfassung=PROTOKOLL.map(e=>'Original: "'+e.original+'" → Korrekt: "'+e.korrekt+'" | Fehler: '+(e.fehlerTypen||[]).join(', ')+' | '+(e.richtig?'Richtig':'Korrektur nötig')+(e.mood?' | Stimmung: '+e.mood:'')+(e.lernziel?' | Lernziel: '+e.lernziel:'')).join('\n');
+  const kiSys=`Du bist ein erfahrener ${niv.kiPersona}. Analysiere die Satz-Übungen.
+Schreibe eine Analyse (max 200 Wörter):
+1. Was kann der Schüler schon gut?
+2. Welche Fehler kommen immer wieder vor? (nenne LP21-Bezüge wo möglich)
+3. Priorisierte Übungsempfehlungen
+4. Konkreter Tipp für die Lehrperson
+${PROTOKOLL.some(e=>e.mood)?'5. Stimmungsmuster: Korrelieren Stimmung und Leistung?':''}
+Einfache professionelle Sprache, kein Markdown.`;
+  callAI(kiSys,PROTOKOLL.length+' Sätze:\n'+zusammenfassung,null,(f)=>{S.aiLoading=false;syncTopbar();if(box)box.innerHTML=`<div class="fb ai" style="margin-top:14px;"><div class="fb-label">🤖 ${niv.kiLabel}</div>${esc(f)}</div>`;},800);
+}
+
+/* ═══ HILFE ═══ */
+function renderHilfe(){
+  const niv=getNiv();
+  const platzhalter=S.niveau==='A'?'Stell eine Frage… z.B. Übersetze auf Türkisch!':S.niveau==='B'?'z.B. Erkläre die Kommaregel!':'z.B. Erkläre den Konjunktiv II!';
+  return `<div class="card" style="border-color:var(--sky);border-width:1.5px;">
+    <div class="card-title" style="font-size:20px;">❓ Hilfe vom Coach <span class="niveau-badge ${niv.badgeClass}" style="font-size:11px;">${niv.badge}</span></div>
+    <div id="hilfe-box"></div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <input class="chat-inp" id="hilfe-inp" placeholder="${platzhalter}" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')hilfeAnfordern()"/>
+      <button class="send-btn" onclick="hilfeAnfordern()" style="flex-shrink:0;">→</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+      ${S.niveau==='A'?`
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Ich verstehe das nicht. Erkläre es einfacher!';hilfeAnfordern()">🤔 Verstehe nicht</button>
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Übersetze meinen Satz in meine Muttersprache!';hilfeAnfordern()">🌍 Fremdsprache</button>
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Gib mir ein Beispiel für einen ähnlichen Satz.';hilfeAnfordern()">💡 Beispiel</button>
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Was bedeutet dieses Wort?';hilfeAnfordern()">📖 Wort erklären</button>`
+      :S.niveau==='B'?`
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Erkläre die Kommaregel für Nebensätze.';hilfeAnfordern()">📌 Kommaregel</button>
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Wann benutze ich Perfekt, wann Präteritum?';hilfeAnfordern()">⏰ Zeitformen</button>
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Gib mir ein Beispiel für einen Relativsatz.';hilfeAnfordern()">💡 Relativsatz</button>`
+      :`
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Erkläre den Konjunktiv II und gib Beispiele.';hilfeAnfordern()">📌 Konjunktiv II</button>
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Was ist der Unterschied zwischen Nominal- und Verbalstil?';hilfeAnfordern()">✍️ Nominalstil</button>
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 14px;" onclick="document.getElementById('hilfe-inp').value='Erkläre erweiterte Partizipialkonstruktionen.';hilfeAnfordern()">💡 Partizip</button>`}
+    </div>
+  </div>`;
+}
+function hilfeAnfordern(){
+  const box=document.getElementById('hilfe-box');const inp=document.getElementById('hilfe-inp');
+  if(!box||!S.apiKey){if(!S.apiKey)openKey();return;}
+  if(S.aiLoading)return;const niv=getNiv();
+  let frage=inp?.value?.trim()||'Ich verstehe das nicht.';if(inp)inp.value='';
+  let kontext='Frage: "'+frage+'"\n\n';
+  if(S.v_satz)kontext+='Satz: "'+S.v_satz+'"\n';
+  if(S.v_phase>=1&&S.v_analyse){kontext+='Absicht: "'+S.v_analyse.absicht+'"\nFehler: '+(S.v_analyse.fehler||[]).map(f=>f.typ+': '+f.erklärung).join(', ')+'\n';}
+  S.aiLoading=true;syncTopbar();
+  box.innerHTML='<div class="fb ai" style="text-align:center;padding:20px;"><span class="cur"></span> Ich denke nach…</div>';
+  const hilfeSys=S.niveau==='A'
+?`Du bist ein geduldiger Satz-Coach für ${niv.zielgruppe}.
+FÄHIGKEITEN: Übersetzen (Türkisch, Arabisch, Albanisch, Portugiesisch, Tamil, Ukrainisch), Grammatik einfach erklären, Beispiele, Wörter erklären.
+REGELN: Max 80 Wörter. Sehr einfache Sprache. Ermutigend. Kein Markdown. Du-Form.`
+:S.niveau==='B'
+?`Du bist ein kompetenter Satz-Coach für ${niv.zielgruppe}(B1-B2).
+REGELN: Max 100 Wörter. Klare Sprache. Strukturiert mit Beispielen. Kein Markdown. Du-Form.`
+:`Du bist ein fachkundiger Satz-Coach für ${niv.zielgruppe}(C1-C2).
+REGELN: Max 120 Wörter. Fachlich präzise. Mehrere Beispiele. Kein Markdown. Du-Form.`;
+  callAI(hilfeSys,kontext,
+    (p)=>{if(box)box.innerHTML='<div class="fb ai"><div class="fb-label">🤗 Coach '+SB(p)+'</div>'+esc(p)+'<span class="cur"></span></div>';},
+    (f)=>{S.aiLoading=false;syncTopbar();speak(f);if(box)box.innerHTML='<div class="fb ai" style="border-color:rgba(96,165,250,0.3);background:var(--sky-l);"><div class="fb-label" style="color:var(--sky);">🤗 Coach '+SB(f)+'</div>'+esc(f)+'</div>';}
+  );
+}
+
+/* ═══ FREIES SCHREIBEN (mit Überarbeitungsschleife NEU 2.4) ═══ */
+let freiText='',freiAnalyse=null,freiPhase=0;
+
+const FREI_CFG={
+  A:{
+    prompt_intro:'Schreib 3–5 Sätze zu irgendeinem Thema. Fehler sind erlaubt!',
+    placeholder:'z.B.: Heute bin ich in die Schule gegangen. Es war schön. Wir haben Mathe gemacht und danach gespielt.',
+    hinweis:'💡 Schreib einfach drauf los — mindestens 3 Sätze!',
+    kriterien:[{key:'verständlichkeit',label:'Verständlichkeit',icon:'👁️'},{key:'grammatik',label:'Grammatik',icon:'🔤'},{key:'zusammenhang',label:'Zusammenhang',icon:'🔗'},{key:'wortwahl',label:'Wortwahl',icon:'📝'}],
+    sys:(zg)=>`Du bist ein einfühlsamer Text-Coach für ${zg}.
+Analysiere GANZHEITLICH und ermutigend.
+NUR JSON:{"gesamtnote":"A/B/C/D","gesamtlob":"2-3 Sätze","verständlichkeit":{"punkte":1-5,"kommentar":"max 20 Wörter"},"grammatik":{"punkte":1-5,"kommentar":"max 20 Wörter","hauptfehler":"oder leer"},"zusammenhang":{"punkte":1-5,"kommentar":"max 20 Wörter"},"wortwahl":{"punkte":1-5,"kommentar":"max 20 Wörter"},"wichtigster_tipp":"max 20 Wörter","verbesserter_satz":"1 Satz verbessert","ermutigung":"1 Satz"}`
+  },
+  B:{
+    prompt_intro:'Schreib einen Absatz (5–8 Sätze). Thema frei.',
+    placeholder:'z.B.: In meiner Freizeit spiele ich gern Fussball…',
+    hinweis:'💡 Schreib mindestens 5 Sätze — achte auf Kommas und Zeitformen!',
+    kriterien:[{key:'grammatik',label:'Grammatik & Syntax',icon:'🔤'},{key:'kohärenz',label:'Textaufbau & Fluss',icon:'🔗'},{key:'wortwahl',label:'Wortwahl & Ausdruck',icon:'📝'},{key:'rechtschreibung',label:'Rechtschreibung',icon:'✏️'}],
+    sys:(zg)=>`Du bist ein kompetenter Text-Coach für ${zg}(B1-B2).
+Analysiere GANZHEITLICH.
+NUR JSON:{"gesamtnote":"A/B/C/D","gesamtlob":"2 Sätze","grammatik":{"punkte":1-5,"kommentar":"max 25 Wörter","fehlerbeispiele":["max 2"]},"kohärenz":{"punkte":1-5,"kommentar":"max 25 Wörter"},"wortwahl":{"punkte":1-5,"kommentar":"max 25 Wörter"},"rechtschreibung":{"punkte":1-5,"kommentar":"max 20 Wörter"},"wichtigster_tipp":"max 30 Wörter","verbesserter_abschnitt":"1-2 Sätze verbessert","ermutigung":"1 Satz"}`
+  },
+  C:{
+    prompt_intro:'Schreib einen Absatz oder kurzen Text (6–12 Sätze). Thema frei.',
+    placeholder:'z.B.: Die zunehmende Digitalisierung verändert unsere Gesellschaft grundlegend…',
+    hinweis:'💡 Achte auf Stilistik, Kohärenz und präzisen Ausdruck!',
+    kriterien:[{key:'grammatik',label:'Grammatik & Syntax',icon:'🔤'},{key:'kohärenz',label:'Kohärenz & Argumentation',icon:'🔗'},{key:'stilistik',label:'Stilistik & Wortwahl',icon:'✍️'},{key:'idiomatik',label:'Idiomatik & Register',icon:'🎯'}],
+    sys:(zg)=>`Du bist ein anspruchsvoller Text-Coach für ${zg}(C1-C2).
+Analysiere auf höchstem Niveau.
+NUR JSON:{"gesamtnote":"A/B/C/D","gesamtlob":"2 Sätze","grammatik":{"punkte":1-5,"kommentar":"max 30 Wörter"},"kohärenz":{"punkte":1-5,"kommentar":"max 30 Wörter"},"stilistik":{"punkte":1-5,"kommentar":"max 30 Wörter"},"idiomatik":{"punkte":1-5,"kommentar":"max 25 Wörter"},"wichtigster_tipp":"max 35 Wörter","verbesserter_abschnitt":"1-2 Sätze optimiert","ermutigung":"1 Satz"}`
+  }
+};
+
+function renderFreiesSchreiben(){
+  const niv=getNiv();const cfg=FREI_CFG[S.niveau]||FREI_CFG.A;
+  if(freiPhase===1&&freiAnalyse)return renderFreieFeedback();
+  return `<div class="card">
+    <div class="card-title">📄 Freies Schreiben <span class="niveau-badge ${niv.badgeClass}" style="font-size:11px;">${niv.badge}</span></div>
+    <div class="card-sub">${cfg.prompt_intro}</div>
+    <textarea id="frei-ta" rows="${S.niveau==='A'?5:7}" style="min-height:${S.niveau==='A'?'120px':'160px'};"
+      placeholder="${cfg.placeholder}"
+      oninput="freiText=this.value;document.getElementById('frei-cc').textContent=this.value.length+' Zeichen'"
+      autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">${esc(freiText)}</textarea>
+    <div class="char-count" id="frei-cc">${freiText.length} Zeichen</div>
+    <div class="hint">${cfg.hinweis}</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" style="background:var(--sky);color:#0f172a;" onclick="analysiereFreiText()">${S.aiLoading?'<span class="cur"></span> Analysiere…':'📊 Text analysieren'}</button>
+      <button class="btn btn-ghost" onclick="freiText='';freiAnalyse=null;freiPhase=0;go('freies-schreiben')">🔄 Neu</button>
+    </div>
+  </div><div id="frei-result"></div>`;
+}
+
+function analysiereFreiText(){
+  const ta=document.getElementById('frei-ta');if(ta)freiText=ta.value;
+  const text=freiText.trim();
+  if(text.length<30){alert('Bitte schreib mindestens ein paar Sätze!');return;}
+  if(!S.apiKey){openKey();return;}if(S.aiLoading)return;
+  S.aiLoading=true;syncTopbar();
+  const box=document.getElementById('frei-result');
+  if(box)box.innerHTML=`<div class="card"><div class="fb ai" style="text-align:center;padding:32px;"><span class="cur"></span><br><br><div style="font-size:16px;font-weight:700;margin-top:12px;">Ich lese deinen Text…</div></div></div>`;
+  const niv=getNiv();const cfg=FREI_CFG[S.niveau]||FREI_CFG.A;
+  callAI(cfg.sys(niv.zielgruppe),`Analysiere:\n\n"${text}"`,null,(f)=>{
+    S.aiLoading=false;syncTopbar();
+    try{freiAnalyse=parseJSON(f);}catch{freiAnalyse={gesamtnote:'B',gesamtlob:'Du hast einen Text geschrieben!',wichtigster_tipp:'Weiter üben!',ermutigung:'Weiter so!'};}
+    freiPhase=1;go('freies-schreiben');
+  },1200);
+}
+
+function renderFreieFeedback(){
+  const niv=getNiv();const cfg=FREI_CFG[S.niveau]||FREI_CFG.A;const r=freiAnalyse;
+  const noteClass=n=>({'A':'note-a','B':'note-b','C':'note-c','D':'note-d'}[n]||'note-b');
+  const noteLabel=n=>({'A':'Sehr gut','B':'Gut','C':'Genügend','D':'Üben!'}[n]||'');
+  const punkte=p=>Math.min(5,Math.max(1,parseInt(p)||3));
+  const barClass=p=>p>=4?'bar-gut':p>=3?'bar-mittel':'bar-schwach';
+  const pct=p=>Math.round((p/5)*100);
+
+  let h=`<div class="print-only" style="margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #e2e8f0;">
+    <div style="font-size:20px;font-weight:800;">SatzCoach — Freies Schreiben</div>
+    <div style="font-size:13px;color:#64748b;margin-top:4px;">Niveau: ${niv.label} | ${new Date().toLocaleDateString('de-CH')}</div>
+    <div style="margin-top:12px;font-size:14px;font-style:italic;color:#475569;padding:12px;background:#f8fafc;border-radius:8px;border-left:4px solid #2dd4a8;">"${esc(freiText)}"</div>
+  </div>`;
+
+  h+=`<div class="feedback-gesamt"><div class="gesamt-note">
+    <div class="note-kreis ${noteClass(r.gesamtnote)}">${r.gesamtnote||'B'}</div>
+    <div><div style="font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;margin-bottom:4px;">${noteLabel(r.gesamtnote)} ${SB(r.gesamtlob||'')}</div>
+    <div style="font-size:16px;color:var(--muted);line-height:1.7;">${esc(r.gesamtlob||'')}</div></div>
+  </div><div style="margin-top:4px;">`;
+  cfg.kriterien.forEach(k=>{const d=r[k.key]||{};const p2=punkte(d.punkte);
+    h+=`<div class="kriterium-row"><div style="font-size:22px;width:28px;flex-shrink:0;">${k.icon}</div><div class="kriterium-bar-wrap">
+      <div class="kriterium-bar-label"><span style="font-size:14px;font-weight:800;">${k.label}</span><span style="font-size:13px;font-weight:800;color:${p2>=4?'var(--lime)':p2>=3?'var(--gold)':'var(--coral)'};">${p2}/5</span></div>
+      <div class="kriterium-bar-track"><div class="kriterium-bar-fill ${barClass(p2)}" style="width:${pct(p2)}%;"></div></div>
+      <div style="font-size:14px;color:var(--muted);margin-top:6px;line-height:1.6;">${esc(d.kommentar||'')}</div>
+    </div></div>`;
+  });
+  h+=`</div></div>`;
+
+  if(r.wichtigster_tipp)h+=`<div class="card" style="border-color:rgba(251,191,36,0.3);background:var(--gold-l);"><div class="card-title" style="font-size:18px;">💡 Wichtigster Tipp</div><div style="font-size:17px;line-height:1.7;">${esc(r.wichtigster_tipp)}</div></div>`;
+  const verb=r.verbesserter_satz||r.verbesserter_abschnitt||'';
+  if(verb)h+=`<div class="card"><div class="card-title" style="font-size:18px;">✅ So klingt es besser</div><div class="korrektur-highlight">${esc(verb)}</div></div>`;
+  h+=`<div class="card" style="border-color:rgba(45,212,168,0.3);"><div style="font-size:18px;font-weight:800;color:var(--accent);margin-bottom:12px;">${esc(r.ermutigung||'Weiter so!')}</div>
+    <div style="font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Dein Text:</div>
+    <div style="font-size:15px;line-height:1.8;color:var(--muted);font-style:italic;padding:14px 16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--card-b);">${esc(freiText)}</div></div>`;
+
+  /* BUTTONS — mit Überarbeiten (NEU 2.4) */
+  h+=`<div class="btn-row no-print" style="justify-content:center;margin-top:4px;">
+    <button class="btn btn-primary" onclick="freiPhase=0;go('freies-schreiben')" style="background:var(--violet);color:#fff;">✍️ Überarbeiten</button>
+    <button class="btn btn-ghost" onclick="window.print()">🖨️ Drucken / PDF</button>
+    <button class="btn btn-ghost" onclick="freiText='';freiAnalyse=null;freiPhase=0;go('freies-schreiben')">🔄 Neuer Text</button>
+  </div>`;
+  return h;
+}
+
+/* ═══ SELFCHECK INPUT SCREEN (NEU 3.3) ═══ */
+/* When selfcheckMode is true and user hasn't yet entered their own errors */
+function renderSelfcheckInput(){
+  const niv=getNiv();
+  const fehlerTypen=S.niveau==='A'?['WORTSTELLUNG','VERB-FORM','ARTIKEL','RECHTSCHREIBUNG','GROSS-KLEIN','SATZZEICHEN','MEHRZAHL']:S.niveau==='B'?['KOMMASETZUNG','ZEITFORM','KASUS','KONJUNKTIV','WORTSTELLUNG','PASSIV','RECHTSCHREIBUNG','SATZZEICHEN']:['STILISTIK','KOHÄRENZ','KONJUNKTIV','KOMMASETZUNG','KASUS','IDIOMATIK','REGISTER'];
+  return `<div class="card">
+    <div class="card-title">🧠 Selbstcheck <span class="niveau-badge ${niv.badgeClass}" style="font-size:11px;">${niv.badge}</span></div>
+    <div class="card-sub">Welche Fehler findest du in deinem Satz? Klick alle an, die du erkennst:</div>
+    <div class="original-satz"><div style="flex:1"><span class="label">✏️ Dein Satz:</span>${esc(S.v_satz)}</div></div>
+    <div class="selfcheck-checklist">${fehlerTypen.map(t=>`<div class="sc-check ${S.sc_eigeneFehler.includes(t)?'checked':''}" onclick="toggleSCFehler('${t}')"><span class="sc-icon">${S.sc_eigeneFehler.includes(t)?'✅':'⬜'}</span><span onclick="event.stopPropagation();showRegelkarte('${t}')" style="cursor:pointer;">${t}</span></div>`).join('')}</div>
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn btn-primary" onclick="S.screen='verbessern';analysiereAbsicht()">🔍 Mit KI vergleichen</button>
+      <button class="btn btn-ghost" onclick="S.sc_eigeneFehler.push('KEINE');S.screen='verbessern';analysiereAbsicht()">✅ Keine Fehler gefunden</button>
+    </div>
+  </div>`;
+}
+function toggleSCFehler(t){if(S.sc_eigeneFehler.includes(t))S.sc_eigeneFehler=S.sc_eigeneFehler.filter(x=>x!==t);else S.sc_eigeneFehler.push(t);render();}
+
+/* Override render for selfcheck-input */
+const _origRender=render;
+render=function(){
+  syncTopbar();const app=document.getElementById('app');if(!app)return;let html='';
+  if(S.screen==='selfcheck-input'){html=renderSelfcheckInput();}
+  else{
+    switch(S.screen){
+      case 'verbessern':case 'selfcheck':html+=renderVerbessern();break;
+      case 'protokoll':html+=renderProtokoll();break;
+      case 'freies-schreiben':html+=renderFreiesSchreiben();break;
+      default:html+=renderHome();
+    }
+  }
+  if(S.screen!=='home')html+=`<div style="text-align:center;margin-top:8px;" class="no-print"><button class="btn btn-ghost" style="font-size:13px;" onclick="go('home')">← Startseite</button></div>`;
+  app.innerHTML=html;
+  requestAnimationFrame(syncInputs);
+};
+
+try{render();}catch(e){document.getElementById('app').innerHTML='<div style="padding:40px;color:#ff6666;">Fehler: '+e.message+'</div>';console.error(e);}
+
+</script></body></html>
